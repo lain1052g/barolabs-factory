@@ -1,6 +1,6 @@
 {
   "framework": "nextjs",
-  "buildCommand": "cd ../.. && npx turbo run build --filter=baro-menoa",
+  "buildCommand": "npm run build",
   "outputDirectory": ".next",
-  "installCommand": "cd ../.. && npm install"
+  "installCommand": "npm install"
 }
