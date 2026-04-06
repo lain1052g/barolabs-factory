@@ -1,13 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <!-- Background -->
-  <rect width="512" height="512" rx="100" fill="#800020"/>
-  <!-- Moon shape (crescent) -->
-  <circle cx="230" cy="260" r="130" fill="white"/>
-  <circle cx="270" cy="215" r="110" fill="#800020"/>
-  <!-- Stars — top right -->
-  <circle cx="390" cy="100" r="14" fill="white" opacity="0.95"/>
-  <circle cx="430" cy="160" r="9"  fill="white" opacity="0.75"/>
-  <circle cx="360" cy="155" r="7"  fill="white" opacity="0.65"/>
-  <circle cx="440" cy="100" r="6"  fill="white" opacity="0.55"/>
-  <circle cx="400" cy="55"  r="8"  fill="white" opacity="0.70"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" width="1024" height="1024">
+  <rect width="1024" height="1024" rx="180" fill="rgb(246,237,239)"/>
+  <rect x="1.5" y="1.5" width="1021" height="1021" rx="179" fill="none" stroke="rgb(225,194,201)" stroke-width="3"/>
+  <!-- 달 본체 (bit0=1, ON) -->
+  <circle cx="512" cy="512" r="262" fill="#800020"/>
+  <!-- 마스크 원 = 배경색으로 초승달 효과 -->
+  <circle cx="618" cy="482" r="202" fill="rgb(246,237,239)"/>
+  <!-- 별1 크게 (bit1=1, ON) -->
+  <circle cx="760" cy="294" r="44" fill="#800020"/>
+  <!-- 별2 중간 (bit2=1, ON) -->
+  <circle cx="824" cy="434" r="28" fill="#800020"/>
+  <!-- 별3 작게 (bit3=1, ON) -->
+  <circle cx="710" cy="204" r="20" fill="#800020"/>
 </svg>
