@@ -14,7 +14,7 @@
     "db:seed": "DATABASE_URL=$npm_config_db_url tsx src/db/seed.ts"
   },
   "dependencies": {
-    "@next/third-parties": "^14.2.0",
+    "@next/third-parties": "^15.0.0",
     "@sentry/nextjs": "^8.0.0",
     "@supabase/ssr": "^0.5.0",
     "@supabase/supabase-js": "^2.0.0",

@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import type { CookieOptions } from '@supabase/ssr';
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
@@ -11,7 +12,7 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         getAll() { return request.cookies.getAll(); },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: Array<{ name: string; value: string; options: CookieOptions }>) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           supabaseResponse = NextResponse.next({ request });
           cookiesToSet.forEach(({ name, value, options }) =>
@@ -25,7 +26,10 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const pathname = request.nextUrl.pathname;
 
-  if (!user && !pathname.startsWith('/login') && !pathname.startsWith('/auth')) {
+  const publicPaths = ['/', '/login', '/auth', '/onboarding', '/terms', '/privacy'];
+  const isPublicPath = publicPaths.some((p) => pathname === p || (p !== '/' && pathname.startsWith(p)));
+
+  if (!user && !isPublicPath) {
     return NextResponse.redirect(new URL('/login', request.url));
   }
   if (user && pathname === '/login') {

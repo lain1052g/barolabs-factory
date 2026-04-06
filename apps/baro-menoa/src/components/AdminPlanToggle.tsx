@@ -7,7 +7,7 @@ import { setPlan } from '@/actions/settings';
 export async function AdminPlanToggle() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
-  if (user?.email !== process.env.ADMIN_EMAIL) return null;
+  if (!user || user.email !== process.env.ADMIN_EMAIL) return null;
 
   const [dbUser] = await db
     .select({ plan: menoa_users.plan })

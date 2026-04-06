@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { menoa_users } from '@/db/schema';
+import { eq } from 'drizzle-orm';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -13,6 +14,12 @@ export async function GET(request: Request) {
     const { error, data } = await supabase.auth.exchangeCodeForSession(code);
 
     if (!error && data.user) {
+      const [existing] = await db
+        .select({ menopause_stage: menoa_users.menopause_stage })
+        .from(menoa_users)
+        .where(eq(menoa_users.supabase_id, data.user.id))
+        .limit(1);
+
       await db.insert(menoa_users)
         .values({
           supabase_id: data.user.id,
@@ -28,7 +35,10 @@ export async function GET(request: Request) {
           },
         });
 
-      return NextResponse.redirect(`${origin}${next}`);
+      // 신규 유저 or 온보딩 미완료 → 온보딩으로
+      const isNewUser = !existing || !existing.menopause_stage;
+      const destination = isNewUser ? '/onboarding' : next;
+      return NextResponse.redirect(`${origin}${destination}`);
     }
   }
 
