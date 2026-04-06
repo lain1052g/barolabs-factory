@@ -7,7 +7,6 @@ import {
   menoa_symptoms,
 } from '@/db/schema';
 import { eq, gte, sql, isNull, desc } from 'drizzle-orm';
-import Link from 'next/link';
 import { PlanChangeButton } from './PlanChangeButton';
 
 const STAGE_LABEL: Record<string, string> = {

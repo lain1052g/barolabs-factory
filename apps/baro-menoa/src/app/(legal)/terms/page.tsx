@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unescaped-entities */
 export default function TermsPage() {
   return (
     <div className="prose prose-sm max-w-none text-gray-700">

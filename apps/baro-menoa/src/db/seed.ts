@@ -46,7 +46,7 @@ const symptoms = [
 ];
 
 async function seed() {
-  console.log('🌱 시드 데이터 삽입 시작...');
+  console.warn('🌱 시드 데이터 삽입 시작...');
 
   await db.insert(menoa_symptom_categories)
     .values(categories)
@@ -56,7 +56,7 @@ async function seed() {
     .values(symptoms.map(s => ({ ...s, id: crypto.randomUUID(), is_active: true })))
     .onConflictDoNothing();
 
-  console.log('✅ 시드 완료 — 카테고리 4개, 증상 27개');
+  console.warn('✅ 시드 완료 — 카테고리 4개, 증상 27개');
   process.exit(0);
 }
 
