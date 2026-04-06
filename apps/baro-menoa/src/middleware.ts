@@ -26,6 +26,12 @@ export async function middleware(request: NextRequest) {
   const { data: { user } } = await supabase.auth.getUser();
   const pathname = request.nextUrl.pathname;
 
+  // 정적 파일은 인증 없이 허용
+  const isStaticFile = /\.(?:js|json|txt|xml|css|ico|webmanifest|woff2?|ttf|otf)$/.test(pathname);
+  if (isStaticFile) {
+    return supabaseResponse;
+  }
+
   const publicPaths = ['/', '/login', '/auth', '/onboarding', '/terms', '/privacy'];
   const isPublicPath = publicPaths.some((p) => pathname === p || (p !== '/' && pathname.startsWith(p)));
 
