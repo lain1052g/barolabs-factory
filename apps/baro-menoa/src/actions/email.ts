@@ -1,6 +1,6 @@
 'use server';
 
-import { resend } from '@/lib/email/resend';
+import { getResend } from '@/lib/email/resend';
 import { WelcomeEmail, subject as welcomeSubject } from '@/lib/email/templates/WelcomeEmail';
 import { SymptomReportEmail, subject as reportSubject } from '@/lib/email/templates/SymptomReportEmail';
 import { db } from '@/db';
@@ -12,7 +12,7 @@ const FROM_ADDRESS = 'noreply@menoa.barolabs.kr';
 
 export async function sendWelcomeEmail(email: string, name: string) {
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: `메노아 <${FROM_ADDRESS}>`,
       to: email,
       subject: welcomeSubject,
@@ -96,7 +96,7 @@ export async function sendWeeklyReport(userId: string) {
 
   // 5. 이메일 발송
   try {
-    const { error } = await resend.emails.send({
+    const { error } = await getResend().emails.send({
       from: `메노아 <${FROM_ADDRESS}>`,
       to: user.email,
       subject: reportSubject,
