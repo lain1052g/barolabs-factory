@@ -63,6 +63,8 @@ export function BottomNav() {
             <Link
               key={tab.href}
               href={tab.href}
+              aria-label={tab.label}
+              aria-current={active ? 'page' : undefined}
               className="flex flex-col items-center gap-0.5 flex-1 py-2"
             >
               {tab.icon(active)}

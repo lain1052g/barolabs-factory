@@ -7,7 +7,7 @@ import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 import { getAdminMessaging } from '@/lib/firebase/admin';
 
-export async function savePushToken(token: string, platform: 'web' | 'android' | 'ios' = 'web') {
+export async function savePushToken(token: string, platform: 'web' | 'android' | 'ios' = 'web'): Promise<void> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
@@ -33,7 +33,7 @@ export async function sendPushNotification(
   title: string,
   body: string,
   url = '/dashboard'
-) {
+): Promise<void> {
   const tokens = await db
     .select({ token: menoa_push_tokens.token })
     .from(menoa_push_tokens)

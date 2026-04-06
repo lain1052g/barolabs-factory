@@ -1,9 +1,15 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { db } from '@/db';
 import { menoa_users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { getSymptomLogsByDate, getRecentSymptomSummary } from '@/actions/symptoms';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: '오늘의 증상 | 메노아',
+  description: '오늘의 갱년기 증상을 기록하고 건강 상태를 확인하세요.',
+};
 
 export const revalidate = 30;
 

@@ -89,6 +89,7 @@ export function InstallBanner() {
           )}
           <button
             onClick={handleDismiss}
+            aria-label="설치 배너 닫기"
             className="text-gray-400 hover:text-gray-600 text-lg leading-none"
           >
             ×

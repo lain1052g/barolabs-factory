@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/server';
 import { eq } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
 
-export async function recordSosUsage(symptomType: string, contentShown: string) {
+export async function recordSosUsage(symptomType: string, contentShown: string): Promise<void> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');

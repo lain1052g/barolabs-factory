@@ -1,5 +1,11 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
+
+export const metadata: Metadata = {
+  title: '설정 | 메노아',
+  description: '프로필, 알림, 계정 설정을 관리하세요.',
+};
 import { db } from '@/db';
 import { menoa_users } from '@/db/schema';
 import { eq } from 'drizzle-orm';

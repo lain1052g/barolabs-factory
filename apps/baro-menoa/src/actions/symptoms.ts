@@ -120,7 +120,7 @@ export async function getRecentSymptomSummary(days = 7) {
 }
 
 // ── 증상 기록 저장 (upsert) ───────────────────────────
-export async function logSymptom(formData: FormData) {
+export async function logSymptom(formData: FormData): Promise<{ error: string } | void> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
@@ -198,7 +198,7 @@ export async function logSymptom(formData: FormData) {
 }
 
 // ── 증상 기록 삭제 ────────────────────────────────────
-export async function deleteSymptomLog(id: string) {
+export async function deleteSymptomLog(id: string): Promise<void> {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');

@@ -15,7 +15,7 @@ async function assertAdmin() {
   return user;
 }
 
-export async function changeUserPlan(userId: string, plan: 'free' | 'pro') {
+export async function changeUserPlan(userId: string, plan: 'free' | 'pro'): Promise<void> {
   await assertAdmin();
 
   await db

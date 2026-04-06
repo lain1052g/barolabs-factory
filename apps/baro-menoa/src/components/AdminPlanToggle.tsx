@@ -22,6 +22,7 @@ export async function AdminPlanToggle() {
       <form action={setPlan.bind(null, currentPlan === 'free' ? 'pro' : 'free')}>
         <button
           type="submit"
+          aria-label={`플랜 ${currentPlan === 'free' ? 'pro로 변경' : 'free로 변경'}`}
           className="px-3 py-1.5 bg-gray-800 text-white text-xs rounded-lg hover:bg-gray-700"
         >
           플랜: {currentPlan} → {currentPlan === 'free' ? 'pro' : 'free'}

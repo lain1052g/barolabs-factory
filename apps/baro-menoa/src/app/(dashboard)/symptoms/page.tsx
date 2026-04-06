@@ -1,6 +1,12 @@
+import type { Metadata } from 'next';
 import { getSymptomLogsByDateRange } from '@/actions/symptoms';
 import Link from 'next/link';
 import { SymptomsFilter } from './SymptomsFilter';
+
+export const metadata: Metadata = {
+  title: '증상 기록 | 메노아',
+  description: '기간별 갱년기 증상 기록을 확인하고 PDF/Excel로 내보내세요.',
+};
 
 export const revalidate = 30;
 

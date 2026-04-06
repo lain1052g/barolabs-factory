@@ -3,7 +3,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 
-export async function signInWithGoogle() {
+export async function signInWithGoogle(): Promise<void> {
   const supabase = await createClient();
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'google',
@@ -14,7 +14,7 @@ export async function signInWithGoogle() {
   if (data.url) redirect(data.url);
 }
 
-export async function signInWithKakao() {
+export async function signInWithKakao(): Promise<void> {
   const supabase = await createClient();
   const { data } = await supabase.auth.signInWithOAuth({
     provider: 'kakao',
@@ -25,7 +25,7 @@ export async function signInWithKakao() {
   if (data.url) redirect(data.url);
 }
 
-export async function signOut() {
+export async function signOut(): Promise<void> {
   const supabase = await createClient();
   await supabase.auth.signOut();
   redirect('/login');
