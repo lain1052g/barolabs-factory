@@ -55,13 +55,22 @@ export default async function SymptomsPage({
       {/* 헤더 */}
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold text-gray-800">증상 기록</h1>
-        <Link
-          href="/symptoms/log"
-          className="px-4 py-2 rounded-xl text-sm font-medium text-white"
-          style={{ backgroundColor: '#800020' }}
-        >
-          + 오늘 기록
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            href="/symptoms/stats"
+            className="px-3 py-2 rounded-xl text-sm font-medium border"
+            style={{ color: '#800020', borderColor: '#e9bec7', backgroundColor: '#fdf6f7' }}
+          >
+            통계 보기
+          </Link>
+          <Link
+            href="/symptoms/log"
+            className="px-4 py-2 rounded-xl text-sm font-medium text-white"
+            style={{ backgroundColor: '#800020' }}
+          >
+            + 오늘 기록
+          </Link>
+        </div>
       </div>
 
       {/* 필터 탭 */}

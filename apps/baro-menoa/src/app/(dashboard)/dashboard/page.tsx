@@ -4,6 +4,8 @@ import { db } from '@/db';
 import { menoa_users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { getSymptomLogsByDate, getRecentSymptomSummary } from '@/actions/symptoms';
+import { getTriggerLogByDate } from '@/actions/triggers';
+import { getMoodLogByDate } from '@/actions/mood';
 import Link from 'next/link';
 
 export const metadata: Metadata = {
@@ -27,9 +29,11 @@ export default async function DashboardPage() {
     .limit(1);
 
   const today = new Date().toISOString().split('T')[0];
-  const [todayLogs, summary] = await Promise.all([
+  const [todayLogs, summary, todayMood, todayTrigger] = await Promise.all([
     getSymptomLogsByDate(today),
     getRecentSymptomSummary(7),
+    getMoodLogByDate(today),
+    getTriggerLogByDate(today),
   ]);
 
   const isPro = dbUser?.plan === 'pro';
@@ -99,6 +103,61 @@ export default async function DashboardPage() {
         오늘 증상 기록하기
         {todayLogs.length > 0 && <span className="ml-2 text-sm font-normal opacity-80">({todayLogs.length}개 기록됨)</span>}
       </Link>
+
+      {/* 오늘의 기분 + 트리거 카드 */}
+      <div className="grid grid-cols-2 gap-3">
+        {/* 기분 카드 */}
+        <Link
+          href="/mood"
+          className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-1.5 active:scale-95 transition-transform"
+        >
+          <p className="text-xs text-gray-400">오늘의 기분</p>
+          {todayMood ? (
+            <>
+              <p className="text-3xl leading-none">{todayMood.mood_emoji}</p>
+              <p className="text-xs font-medium" style={{ color: '#800020' }}>
+                {todayMood.mood_score}점
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-3xl leading-none text-gray-200">😐</p>
+              <p className="text-xs text-gray-300">기록하기</p>
+            </>
+          )}
+        </Link>
+
+        {/* 트리거 카드 */}
+        <Link
+          href="/triggers"
+          className="bg-white rounded-2xl p-4 shadow-sm flex flex-col gap-1.5 active:scale-95 transition-transform"
+        >
+          <p className="text-xs text-gray-400">오늘의 트리거</p>
+          {todayTrigger ? (
+            <>
+              <div className="flex flex-wrap gap-1">
+                {todayTrigger.caffeine_cups > 0 && <span className="text-base">☕</span>}
+                {todayTrigger.alcohol_units > 0 && <span className="text-base">🍷</span>}
+                {todayTrigger.stress_level !== null && <span className="text-base">😤</span>}
+                {todayTrigger.sleep_minutes > 0 && todayTrigger.sleep_minutes < 360 && (
+                  <span className="text-base">😴</span>
+                )}
+                {todayTrigger.exercise_minutes > 0 && <span className="text-base">🏃</span>}
+                {todayTrigger.note?.includes('#날씨') && <span className="text-base">🌡️</span>}
+                {todayTrigger.note?.includes('#기타') && <span className="text-base">📝</span>}
+              </div>
+              <p className="text-xs font-medium" style={{ color: '#800020' }}>
+                기록됨
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="text-3xl leading-none text-gray-200">🎯</p>
+              <p className="text-xs text-gray-300">기록하기</p>
+            </>
+          )}
+        </Link>
+      </div>
 
       {/* 오늘의 증상 목록 */}
       {todayLogs.length > 0 && (
