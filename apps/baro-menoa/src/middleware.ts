@@ -6,8 +6,11 @@ import type { NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // 정적 파일은 미들웨어 처리 없이 즉시 통과
-  if (/\.(?:js|json|txt|xml|css|ico|webmanifest|woff2?|ttf|otf)$/.test(pathname)) {
+  // 정적 파일 및 API Route는 미들웨어 처리 없이 즉시 통과
+  if (
+    /\.(?:js|json|txt|xml|css|ico|webmanifest|woff2?|ttf|otf)$/.test(pathname) ||
+    pathname.startsWith('/api/')
+  ) {
     return NextResponse.next();
   }
 
