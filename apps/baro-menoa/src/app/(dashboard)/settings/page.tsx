@@ -5,6 +5,7 @@ import { menoa_users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
 import { signOut } from '@/actions/auth';
 import { PushPermissionButton } from '@/components/PushPermissionButton';
+import { ProfileForm } from './ProfileForm';
 
 export default async function SettingsPage() {
   const supabase = await createClient();
@@ -23,24 +24,46 @@ export default async function SettingsPage() {
     <div className="px-4 py-6 space-y-4 max-w-md mx-auto">
       <h1 className="text-xl font-bold text-gray-800">설정</h1>
 
-      {/* 프로필 */}
+      {/* 프로필 아바타 */}
       <div className="bg-white rounded-2xl p-5 shadow-sm flex items-center gap-4">
         <div
           className="w-14 h-14 rounded-full flex items-center justify-center text-xl font-bold text-white flex-shrink-0"
           style={{ backgroundColor: '#800020' }}
         >
-          {(user.user_metadata?.full_name ?? user.email ?? '?')[0].toUpperCase()}
+          {(dbUser?.name ?? user.user_metadata?.full_name ?? user.email ?? '?')[0].toUpperCase()}
         </div>
-        <div>
-          <p className="font-semibold text-gray-800">{user.user_metadata?.full_name ?? '이름 없음'}</p>
-          <p className="text-sm text-gray-500">{user.email}</p>
+        <div className="flex-1 min-w-0">
+          <p className="font-semibold text-gray-800 truncate">
+            {dbUser?.name ?? user.user_metadata?.full_name ?? '이름 없음'}
+          </p>
+          <p className="text-sm text-gray-500 truncate">{user.email}</p>
         </div>
+        <span
+          className="px-3 py-1 rounded-full text-xs font-bold flex-shrink-0"
+          style={{
+            backgroundColor: isPro ? '#800020' : '#f3f4f6',
+            color: isPro ? 'white' : '#6b7280',
+          }}
+        >
+          {isPro ? 'Pro' : 'Free'}
+        </span>
+      </div>
+
+      {/* 프로필 편집 */}
+      <div className="bg-white rounded-2xl p-5 shadow-sm space-y-4">
+        <h2 className="font-semibold text-gray-800">프로필 편집</h2>
+        <ProfileForm
+          name={dbUser?.name ?? null}
+          birth_year={dbUser?.birth_year ?? null}
+          menopause_stage={dbUser?.menopause_stage ?? null}
+          last_period_date={dbUser?.last_period_date ?? null}
+        />
       </div>
 
       {/* 플랜 */}
       <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
         <div className="flex items-center justify-between">
-          <p className="font-semibold text-gray-800">현재 플랜</p>
+          <h2 className="font-semibold text-gray-800">현재 플랜</h2>
           <span
             className="px-3 py-1 rounded-full text-xs font-bold"
             style={{
@@ -78,25 +101,15 @@ export default async function SettingsPage() {
         )}
       </div>
 
-      {/* 갱년기 단계 (정보 표시) */}
-      {dbUser?.menopause_stage && (
-        <div className="bg-white rounded-2xl p-5 shadow-sm">
-          <p className="font-semibold text-gray-800 mb-1">갱년기 단계</p>
-          <p className="text-sm text-gray-500">
-            {{ pre: '폐경 전기 (Pre-menopause)', peri: '폐경 이행기 (Perimenopause)', post: '폐경 후기 (Post-menopause)' }[dbUser.menopause_stage]}
-          </p>
-        </div>
-      )}
-
       {/* 알림 설정 */}
       <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
-        <p className="font-semibold text-gray-800">알림</p>
+        <h2 className="font-semibold text-gray-800">알림</h2>
         <PushPermissionButton />
       </div>
 
       {/* 앱 정보 */}
       <div className="bg-white rounded-2xl p-5 shadow-sm space-y-2">
-        <p className="font-semibold text-gray-800">앱 정보</p>
+        <h2 className="font-semibold text-gray-800">앱 정보</h2>
         <div className="text-sm text-gray-500 space-y-1">
           <p>버전 0.1.0</p>
           <p>meno(폐경) + a(again) — 갱년기 건강을 다시 찾아드립니다</p>
@@ -107,16 +120,19 @@ export default async function SettingsPage() {
         </div>
       </div>
 
-      {/* 로그아웃 */}
-      <form action={signOut}>
-        <button
-          type="submit"
-          className="w-full py-3 rounded-xl border text-sm font-medium transition-colors"
-          style={{ borderColor: '#fca5a5', color: '#ef4444' }}
-        >
-          로그아웃
-        </button>
-      </form>
+      {/* 위험 구역: 로그아웃 */}
+      <div className="bg-white rounded-2xl p-5 shadow-sm space-y-3">
+        <h2 className="font-semibold text-gray-800">계정</h2>
+        <form action={signOut}>
+          <button
+            type="submit"
+            className="w-full py-3 rounded-xl border text-sm font-medium transition-colors"
+            style={{ borderColor: '#fca5a5', color: '#ef4444' }}
+          >
+            로그아웃
+          </button>
+        </form>
+      </div>
     </div>
   );
 }

@@ -39,6 +39,33 @@ export async function getAllSymptoms() {
     .orderBy(menoa_symptoms.sort_order);
 }
 
+// ── 날짜 범위 기록 조회 (목록 페이지용) ──────────────
+export async function getSymptomLogsByDateRange(from: string, to: string) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) redirect('/login');
+
+  return db
+    .select({
+      id: menoa_symptom_logs.id,
+      symptom_id: menoa_symptom_logs.symptom_id,
+      severity: menoa_symptom_logs.severity,
+      note: menoa_symptom_logs.note,
+      log_date: menoa_symptom_logs.log_date,
+      symptom_name: menoa_symptoms.name,
+      category_id: menoa_symptoms.category_id,
+    })
+    .from(menoa_symptom_logs)
+    .innerJoin(menoa_symptoms, eq(menoa_symptom_logs.symptom_id, menoa_symptoms.id))
+    .where(and(
+      eq(menoa_symptom_logs.author_supabase_id, user.id),
+      gte(menoa_symptom_logs.log_date, from),
+      lte(menoa_symptom_logs.log_date, to),
+      isNull(menoa_symptom_logs.deleted_at),
+    ))
+    .orderBy(desc(menoa_symptom_logs.log_date), menoa_symptom_logs.created_at);
+}
+
 // ── 날짜별 기록 조회 ──────────────────────────────────
 export async function getSymptomLogsByDate(date: string) {
   const supabase = await createClient();

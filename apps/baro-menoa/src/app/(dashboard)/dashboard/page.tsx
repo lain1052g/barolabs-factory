@@ -28,6 +28,19 @@ export default async function DashboardPage() {
 
   const isPro = dbUser?.plan === 'pro';
 
+  // 오늘 평균 심각도 계산
+  const avgSeverity = todayLogs.length > 0
+    ? Math.round(todayLogs.reduce((sum, l) => sum + l.severity, 0) / todayLogs.length)
+    : 0;
+
+  const greeting = (() => {
+    const h = new Date().getHours();
+    if (h < 6) return '좋은 새벽이에요';
+    if (h < 12) return '좋은 아침이에요';
+    if (h < 18) return '좋은 오후예요';
+    return '좋은 저녁이에요';
+  })();
+
   return (
     <div className="px-4 py-6 space-y-4">
       {/* 헤더 */}
@@ -36,7 +49,9 @@ export default async function DashboardPage() {
           <p className="text-sm text-gray-500">
             {new Date().toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'long' })}
           </p>
-          <h1 className="text-xl font-bold mt-0.5" style={{ color: '#800020' }}>메노아</h1>
+          <h1 className="text-xl font-bold mt-0.5" style={{ color: '#800020' }}>
+            {greeting}, {dbUser?.name?.split(' ')[0] ?? '반가워요'} 👋
+          </h1>
         </div>
         <span
           className="px-2.5 py-1 rounded-full text-xs font-semibold"
@@ -46,41 +61,52 @@ export default async function DashboardPage() {
         </span>
       </div>
 
-      {/* SOS 버튼 */}
+      {/* 오늘 요약 카드 */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-xs text-gray-400 mb-1">오늘 기록한 증상</p>
+          <p className="text-3xl font-bold" style={{ color: '#800020' }}>{todayLogs.length}</p>
+          <p className="text-xs text-gray-400 mt-1">개</p>
+        </div>
+        <div className="bg-white rounded-2xl p-4 shadow-sm">
+          <p className="text-xs text-gray-400 mb-1">평균 심각도</p>
+          {avgSeverity > 0 ? (
+            <>
+              <p className="text-3xl font-bold" style={{ color: SEVERITY_COLOR[avgSeverity] }}>{avgSeverity}</p>
+              <p className="text-xs mt-1" style={{ color: SEVERITY_COLOR[avgSeverity] }}>{SEVERITY_LABEL[avgSeverity]}</p>
+            </>
+          ) : (
+            <>
+              <p className="text-3xl font-bold text-gray-200">—</p>
+              <p className="text-xs text-gray-300 mt-1">기록 없음</p>
+            </>
+          )}
+        </div>
+      </div>
+
+      {/* 빠른 기록 버튼 */}
       <Link
-        href="/sos"
-        className="block w-full py-5 rounded-2xl text-white text-center font-bold text-lg shadow-sm active:scale-95 transition-transform"
+        href="/symptoms/log"
+        className="block w-full py-4 rounded-2xl text-white text-center font-semibold text-base shadow-sm active:scale-95 transition-transform"
         style={{ background: 'linear-gradient(135deg, #800020, #a50028)' }}
       >
-        <span className="block text-2xl mb-1">🆘</span>
-        SOS — 지금 힘들어요
+        오늘 증상 기록하기
+        {todayLogs.length > 0 && <span className="ml-2 text-sm font-normal opacity-80">({todayLogs.length}개 기록됨)</span>}
       </Link>
 
-      {/* 오늘의 증상 */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-gray-800">오늘의 증상</h2>
-          <Link
-            href="/symptoms/log"
-            className="text-sm font-medium px-3 py-1.5 rounded-xl"
-            style={{ color: '#800020', backgroundColor: '#fdf6f7' }}
-          >
-            + 기록하기
-          </Link>
-        </div>
-
-        {todayLogs.length === 0 ? (
-          <div className="text-center py-6">
-            <p className="text-gray-400 text-sm">오늘 기록된 증상이 없습니다</p>
+      {/* 오늘의 증상 목록 */}
+      {todayLogs.length > 0 && (
+        <div className="bg-white rounded-2xl p-5 shadow-sm">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-semibold text-gray-800">오늘의 증상</h2>
             <Link
               href="/symptoms/log"
-              className="inline-block mt-3 px-4 py-2 rounded-xl text-sm font-medium text-white"
-              style={{ backgroundColor: '#800020' }}
+              className="text-xs font-medium"
+              style={{ color: '#800020' }}
             >
-              첫 증상 기록하기
+              수정하기
             </Link>
           </div>
-        ) : (
           <div className="space-y-2">
             {todayLogs.map(log => (
               <div key={log.id} className="flex items-center justify-between py-2 border-b border-gray-50 last:border-0">
@@ -97,41 +123,66 @@ export default async function DashboardPage() {
               </div>
             ))}
           </div>
+        </div>
+      )}
+
+      {/* 최근 7일 증상 추이 */}
+      <div className="bg-white rounded-2xl p-5 shadow-sm">
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="font-semibold text-gray-800">최근 7일 증상 추이</h2>
+          <Link href="/symptoms" className="text-xs" style={{ color: '#800020' }}>전체 보기</Link>
+        </div>
+        <div className="flex items-end gap-1.5 h-20">
+          {Array.from({ length: 7 }).map((_, i) => {
+            const d = new Date();
+            d.setDate(d.getDate() - (6 - i));
+            const dateStr = d.toISOString().split('T')[0];
+            const entry = summary.find(s => s.log_date === dateStr);
+            const maxSev = entry ? Number(entry.max_severity) : 0;
+            const barHeight = maxSev > 0 ? Math.max(16, (maxSev / 5) * 100) : 4;
+            const isToday = dateStr === today;
+            return (
+              <div key={i} className="flex-1 flex flex-col items-center gap-1">
+                {entry && (
+                  <span className="text-[8px] text-gray-400">{Number(entry.count)}</span>
+                )}
+                <div className="w-full flex items-end" style={{ height: 64 }}>
+                  <div
+                    className="w-full rounded-t-md transition-all"
+                    style={{
+                      height: `${barHeight}%`,
+                      backgroundColor: maxSev > 0 ? SEVERITY_COLOR[maxSev] : '#e5e7eb',
+                      opacity: isToday ? 1 : 0.7,
+                    }}
+                  />
+                </div>
+                <span
+                  className="text-[9px] font-medium"
+                  style={{ color: isToday ? '#800020' : '#9ca3af' }}
+                >
+                  {d.toLocaleDateString('ko-KR', { weekday: 'narrow' })}
+                </span>
+              </div>
+            );
+          })}
+        </div>
+        {summary.length === 0 && (
+          <p className="text-gray-400 text-xs text-center mt-2">증상을 기록하면 추이가 표시됩니다</p>
         )}
       </div>
 
-      {/* 최근 7일 요약 */}
-      <div className="bg-white rounded-2xl p-5 shadow-sm">
-        <h2 className="font-semibold text-gray-800 mb-3">최근 7일 증상 추이</h2>
-        {summary.length === 0 ? (
-          <p className="text-gray-400 text-sm text-center py-4">데이터를 쌓으면 추이가 표시됩니다</p>
-        ) : (
-          <div className="flex items-end gap-1 h-16">
-            {Array.from({ length: 7 }).map((_, i) => {
-              const d = new Date();
-              d.setDate(d.getDate() - (6 - i));
-              const dateStr = d.toISOString().split('T')[0];
-              const entry = summary.find(s => s.log_date === dateStr);
-              const height = entry ? Math.max(20, (entry.max_severity / 5) * 100) : 0;
-              return (
-                <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                  <div
-                    className="w-full rounded-t-sm transition-all"
-                    style={{
-                      height: `${height}%`,
-                      minHeight: entry ? 8 : 0,
-                      backgroundColor: entry ? SEVERITY_COLOR[entry.max_severity] : 'transparent',
-                    }}
-                  />
-                  <span className="text-[9px] text-gray-400">
-                    {d.toLocaleDateString('ko-KR', { weekday: 'narrow' })}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+      {/* SOS 버튼 */}
+      <Link
+        href="/sos"
+        className="flex items-center justify-between w-full px-5 py-4 rounded-2xl border-2 active:scale-95 transition-transform"
+        style={{ borderColor: '#800020', backgroundColor: '#fff5f7' }}
+      >
+        <div>
+          <p className="font-semibold text-sm" style={{ color: '#800020' }}>SOS — 지금 힘들어요</p>
+          <p className="text-xs text-gray-500 mt-0.5">안면홍조·발한 즉각 대처법 안내</p>
+        </div>
+        <span className="text-2xl">🆘</span>
+      </Link>
     </div>
   );
 }

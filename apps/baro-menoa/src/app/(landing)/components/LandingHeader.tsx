@@ -1,16 +1,12 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function LandingHeader() {
   return (
     <header className="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-gray-100">
       <div className="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2">
-          <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white font-bold text-sm"
-            style={{ backgroundColor: '#800020' }}
-          >
-            메
-          </div>
+          <Image src="/br-s15-menoa.svg" alt="메노아" width={32} height={32} className="rounded-lg" />
           <span className="font-bold text-gray-900">메노아</span>
         </Link>
 

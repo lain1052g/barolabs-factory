@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 export function LandingFooter() {
   return (
@@ -7,12 +8,7 @@ export function LandingFooter() {
         <div className="flex flex-col md:flex-row justify-between gap-8 mb-8">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <div
-                className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-bold text-xs"
-                style={{ backgroundColor: '#800020' }}
-              >
-                메
-              </div>
+              <Image src="/br-s15-menoa.svg" alt="메노아" width={28} height={28} className="rounded-lg" />
               <span className="font-bold text-gray-800">메노아</span>
             </div>
             <p className="text-sm text-gray-500 max-w-xs">

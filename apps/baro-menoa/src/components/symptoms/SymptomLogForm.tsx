@@ -7,7 +7,7 @@ import { useTransition } from 'react';
 
 type Symptom = { id: string; name: string; category_id: string; sort_order: number };
 type Category = { id: string; name: string; sort_order: number };
-type ExistingLog = { id: string; symptom_id: string; severity: number; symptom_name: string };
+type ExistingLog = { id: string; symptom_id: string; severity: number; symptom_name: string; note?: string | null };
 
 const SEVERITY_LABELS = ['', '매우 약함', '약함', '보통', '심함', '매우 심함'];
 const SEVERITY_COLORS = ['', '#22c55e', '#84cc16', '#f59e0b', '#ef4444', '#dc2626'];
@@ -26,12 +26,13 @@ export function SymptomLogForm({
   const [selectedCat, setSelectedCat] = useState(categories[0]?.id ?? '');
   const [selectedSymptom, setSelectedSymptom] = useState<string | null>(null);
   const [severity, setSeverity] = useState(3);
+  const [note, setNote] = useState('');
   const [deletePending, startDelete] = useTransition();
 
   const [state, formAction, pending] = useActionState<{ error: string } | null, FormData>(
     async (_prev, formData) => {
       const result = await logSymptom(formData);
-      if (!result?.error) setSelectedSymptom(null);
+      if (!result?.error) { setSelectedSymptom(null); setNote(''); }
       return result ?? null;
     },
     null,
@@ -68,7 +69,11 @@ export function SymptomLogForm({
           return (
             <button
               key={s.id}
-              onClick={() => { setSelectedSymptom(isSelected ? null : s.id); if (log) setSeverity(log.severity); }}
+              onClick={() => {
+                setSelectedSymptom(isSelected ? null : s.id);
+                if (log) { setSeverity(log.severity); setNote(log.note ?? ''); }
+                else { setSeverity(3); setNote(''); }
+              }}
               className="relative p-3 rounded-xl text-left transition-all border-2"
               style={{
                 borderColor: isSelected ? '#800020' : isLogged ? '#fca5a5' : '#e5e7eb',
@@ -125,6 +130,23 @@ export function SymptomLogForm({
             <input type="hidden" name="symptom_id" value={selectedSymptom} />
             <input type="hidden" name="severity" value={severity} />
             <input type="hidden" name="log_date" value={date} />
+
+            {/* 메모 */}
+            <div>
+              <label className="text-xs text-gray-500 mb-1 block">메모 (선택)</label>
+              <textarea
+                name="note"
+                value={note}
+                onChange={e => setNote(e.target.value)}
+                placeholder="증상에 대한 메모를 남겨보세요..."
+                maxLength={500}
+                rows={2}
+                className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 placeholder:text-gray-300"
+                style={{ '--tw-ring-color': '#800020' } as React.CSSProperties}
+              />
+              <p className="text-right text-[10px] text-gray-300 mt-0.5">{note.length}/500</p>
+            </div>
+
             <button
               type="submit"
               disabled={pending}

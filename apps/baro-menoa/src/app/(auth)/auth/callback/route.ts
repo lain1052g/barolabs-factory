@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/db';
 import { menoa_users } from '@/db/schema';
 import { eq } from 'drizzle-orm';
+import { sendWelcomeEmail } from '@/actions/email';
 
 export async function GET(request: Request) {
   const { searchParams, origin } = new URL(request.url);
@@ -38,6 +39,14 @@ export async function GET(request: Request) {
       // 신규 유저 or 온보딩 미완료 → 온보딩으로
       const isNewUser = !existing || !existing.menopause_stage;
       const destination = isNewUser ? '/onboarding' : next;
+
+      // 신규 유저에게만 환영 이메일 발송 (fire-and-forget)
+      if (!existing) {
+        sendWelcomeEmail(
+          data.user.email!,
+          data.user.user_metadata?.full_name ?? '',
+        ).catch((err) => console.error('[callback] sendWelcomeEmail failed:', err));
+      }
       return NextResponse.redirect(`${origin}${destination}`);
     }
   }

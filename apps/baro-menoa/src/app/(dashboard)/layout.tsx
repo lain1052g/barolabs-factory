@@ -21,7 +21,7 @@ export default async function DashboardLayout({ children }: { children: React.Re
   if (!dbUser?.menopause_stage) redirect('/onboarding');
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: '#fdf6f7' }}>
+    <div className="min-h-screen bg-[var(--background)] text-[var(--foreground)]">
       <main className="max-w-lg mx-auto pb-20">
         {children}
       </main>
