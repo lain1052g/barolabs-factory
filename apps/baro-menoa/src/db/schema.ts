@@ -35,6 +35,12 @@ export const menoa_users = pgTable(
     pro_expires_at: timestamp('pro_expires_at'),
     // plan 제한 체크용 — 월별 PDF 발급 횟수 (Free: 월 1회, Pro: 무제한)
     upload_count: integer('upload_count').default(0).notNull(),
+    // 이메일 마케팅 수신 동의 (선택) — 온보딩/설정에서 설정
+    // DB 마이그레이션: src/db/migrations/add_email_marketing_agreed.sql 실행 필요
+    email_marketing_agreed: boolean('email_marketing_agreed').default(false),
+    // 알림 시간 설정 (0~23) — daily-reminder cron이 이 값을 참조
+    // DB 마이그레이션: src/db/migrations/add_notification_hour.sql 실행 필요
+    notification_hour: integer('notification_hour').default(11),
     created_at: timestamp('created_at').defaultNow().notNull(),
     updated_at: timestamp('updated_at').defaultNow().notNull(),
   },
@@ -376,9 +382,37 @@ export type MenoaPushToken = InferSelectModel<typeof menoa_push_tokens>;
 export type NewMenoaPushToken = InferInsertModel<typeof menoa_push_tokens>;
 
 // ─────────────────────────────────────────────
+// 12. HEALTH PROFILES (건강 프로필 — 선택 입력)
+// ─────────────────────────────────────────────
+export const menoa_health_profiles = pgTable(
+  'menoa_health_profiles',
+  {
+    id: text('id').primaryKey().$defaultFn(() => crypto.randomUUID()),
+    user_id: text('user_id')
+      .notNull()
+      .unique()
+      .references(() => menoa_users.id, { onDelete: 'cascade' }),
+    // 체크리스트 — 해당하는 항목 ID 배열로 저장
+    conditions: text('conditions').array().notNull().default([]),       // 현재 지병
+    medical_history: text('medical_history').array().notNull().default([]), // 병력·과거력
+    medications: text('medications').array().notNull().default([]),     // 복용 약물
+    supplements: text('supplements').array().notNull().default([]),     // 영양제·보조식품
+    is_smoker: boolean('is_smoker').notNull().default(false),
+    created_at: timestamp('created_at').defaultNow().notNull(),
+    updated_at: timestamp('updated_at').defaultNow().notNull(),
+  },
+  (t) => [
+    index('menoa_health_profiles_user_idx').on(t.user_id),
+  ],
+);
+
+export type MenoaHealthProfile = InferSelectModel<typeof menoa_health_profiles>;
+export type NewMenoaHealthProfile = InferInsertModel<typeof menoa_health_profiles>;
+
+// ─────────────────────────────────────────────
 // RELATIONS
 // ─────────────────────────────────────────────
-export const menoa_users_relations = relations(menoa_users, ({ many }) => ({
+export const menoa_users_relations = relations(menoa_users, ({ many, one }) => ({
   symptom_logs: many(menoa_symptom_logs),
   trigger_logs: many(menoa_trigger_logs),
   sos_logs: many(menoa_sos_logs),
@@ -387,6 +421,10 @@ export const menoa_users_relations = relations(menoa_users, ({ many }) => ({
   pdf_reports: many(menoa_pdf_reports),
   subscriptions: many(menoa_subscriptions),
   push_tokens: many(menoa_push_tokens),
+  health_profile: one(menoa_health_profiles, {
+    fields: [menoa_users.id],
+    references: [menoa_health_profiles.user_id],
+  }),
 }));
 
 export const menoa_symptom_categories_relations = relations(

@@ -9,7 +9,7 @@ import type {
 
 // ─── 카테고리 색상 매핑 ────────────────────────────────
 const CATEGORY_COLORS: Record<string, string> = {
-  '신체증상': '#800020',
+  '신체증상': 'var(--c-brand)',
   '정서/인지': '#c0446a',
   '수면': '#e07090',
   '성건강': '#f4aac0',
@@ -74,7 +74,7 @@ export function MonthlyBarChart({ data }: { data: MonthlyCount[] }) {
                 height: `${barHeight}%`,
                 minHeight: item.count > 0 ? '4px' : '0',
                 borderRadius: '6px 6px 0 0',
-                backgroundColor: '#800020',
+                backgroundColor: 'var(--c-brand)',
                 opacity: item.count > 0 ? 1 : 0.15,
                 transition: 'height 0.3s ease',
               }}
@@ -194,7 +194,7 @@ export function TopSymptomsChart({ data }: { data: TopSymptom[] }) {
                 width: '20px',
                 height: '20px',
                 borderRadius: '50%',
-                backgroundColor: idx === 0 ? '#800020' : '#f3f4f6',
+                backgroundColor: idx === 0 ? 'var(--c-brand)' : '#f3f4f6',
                 color: idx === 0 ? '#ffffff' : '#6b7280',
                 fontSize: '11px',
                 fontWeight: 700,
@@ -230,7 +230,7 @@ export function TopSymptomsChart({ data }: { data: TopSymptom[] }) {
                   style={{
                     width: `${widthPct}%`,
                     height: '100%',
-                    backgroundColor: '#800020',
+                    backgroundColor: 'var(--c-brand)',
                     borderRadius: '3px',
                     opacity: 1 - idx * 0.15,
                   }}

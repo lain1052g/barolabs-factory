@@ -1,4 +1,6 @@
+import type { Metadata } from 'next';
 import { createClient } from '@/lib/supabase/server';
+import { isAdmin } from '@/lib/admin';
 import { redirect } from 'next/navigation';
 import { db } from '@/db';
 import {
@@ -6,8 +8,17 @@ import {
   menoa_symptom_logs,
   menoa_symptoms,
 } from '@/db/schema';
-import { eq, gte, sql, isNull, desc } from 'drizzle-orm';
+import { eq, gte, sql, isNull, desc, isNotNull } from 'drizzle-orm';
+import Link from 'next/link';
 import { PlanChangeButton } from './PlanChangeButton';
+import { GrantProSection } from './GrantProSection';
+
+export const metadata: Metadata = {
+  title: '관리자 대시보드 | 메노아',
+  description: '메노아 서비스 관리자 페이지',
+};
+
+export const revalidate = 0;
 
 const STAGE_LABEL: Record<string, string> = {
   pre: '폐경 전',
@@ -19,7 +30,7 @@ export default async function AdminPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user || user.email !== process.env.ADMIN_EMAIL) {
+  if (!user || !isAdmin(user.email)) {
     redirect('/dashboard');
   }
 
@@ -33,6 +44,8 @@ export default async function AdminPage() {
     todayUsersResult,
     totalLogsResult,
     proUsersResult,
+    proExpiresCountResult,
+    proExpiresAtResult,
   ] = await Promise.all([
     db.select({ count: sql<number>`count(*)::int` }).from(menoa_users),
     db
@@ -47,12 +60,24 @@ export default async function AdminPage() {
       .select({ count: sql<number>`count(*)::int` })
       .from(menoa_users)
       .where(eq(menoa_users.plan, 'pro')),
+    db
+      .select({ count: sql<number>`count(*)::int` })
+      .from(menoa_users)
+      .where(isNotNull(menoa_users.pro_expires_at)),
+    db
+      .select({ expires_at: menoa_users.pro_expires_at })
+      .from(menoa_users)
+      .where(isNotNull(menoa_users.pro_expires_at))
+      .orderBy(desc(menoa_users.pro_expires_at))
+      .limit(1),
   ]);
 
   const totalUsers = totalUsersResult[0]?.count ?? 0;
   const todayUsers = todayUsersResult[0]?.count ?? 0;
   const totalLogs = totalLogsResult[0]?.count ?? 0;
   const proUsers = proUsersResult[0]?.count ?? 0;
+  const proExpiresCount = proExpiresCountResult[0]?.count ?? 0;
+  const proExpiresAt = proExpiresAtResult[0]?.expires_at ?? null;
 
   // ── 최근 가입자 20명
   const recentUsers = await db
@@ -91,6 +116,27 @@ export default async function AdminPage() {
 
   return (
     <div className="space-y-8">
+      {/* 관리자 도구 바로가기 */}
+      <section>
+        <h2 className="text-base font-semibold text-gray-700 mb-3">관리 도구</h2>
+        <div className="flex flex-wrap gap-3">
+          <Link
+            href="/admin/evidence"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm"
+            style={{ backgroundColor: 'var(--c-brand)' }}
+          >
+            🔬 의학적 근거 자료
+          </Link>
+          <Link
+            href="/admin/content"
+            className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium text-white shadow-sm"
+            style={{ backgroundColor: 'var(--c-brand)' }}
+          >
+            📝 전문가 콘텐츠 관리
+          </Link>
+        </div>
+      </section>
+
       {/* 통계 카드 */}
       <section>
         <h2 className="text-base font-semibold text-gray-700 mb-3">개요</h2>
@@ -101,7 +147,7 @@ export default async function AdminPage() {
               className="rounded-xl border border-gray-200 bg-white p-4 shadow-sm"
             >
               <p className="text-xs text-gray-500 mb-1">{s.label}</p>
-              <p className="text-2xl font-bold" style={{ color: '#800020' }}>
+              <p className="text-2xl font-bold" style={{ color: 'var(--c-brand)' }}>
                 {s.value.toLocaleString()}
                 <span className="text-sm font-normal text-gray-500 ml-1">{s.suffix}</span>
               </p>
@@ -122,7 +168,7 @@ export default async function AdminPage() {
                 <li key={s.symptom_id} className="flex items-center gap-3 px-4 py-3">
                   <span
                     className="w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold text-white shrink-0"
-                    style={{ backgroundColor: '#800020' }}
+                    style={{ backgroundColor: 'var(--c-brand)' }}
                   >
                     {i + 1}
                   </span>
@@ -134,6 +180,23 @@ export default async function AdminPage() {
               ))}
             </ol>
           )}
+        </div>
+      </section>
+
+      {/* 전원 Pro 일괄 부여 */}
+      <section>
+        <h2 className="text-base font-semibold text-gray-700 mb-3">전원 Pro 부여</h2>
+        <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-4 space-y-3">
+          <div className="text-sm text-gray-500 space-y-1">
+            <p>Free 플랜 유저 전원의 <code className="bg-gray-100 px-1 py-0.5 rounded text-xs">pro_expires_at</code>을 설정합니다.</p>
+            {proExpiresCount > 0 && proExpiresAt && (
+              <p className="text-xs text-gray-400">
+                현재 pro_expires_at 설정된 유저: {proExpiresCount}명
+                (만료일: {proExpiresAt.toLocaleDateString('ko-KR')})
+              </p>
+            )}
+          </div>
+          <GrantProSection />
         </div>
       </section>
 
@@ -164,7 +227,7 @@ export default async function AdminPage() {
                           ? 'text-white'
                           : 'bg-gray-100 text-gray-600'
                       }`}
-                      style={u.plan === 'pro' ? { backgroundColor: '#800020' } : undefined}
+                      style={u.plan === 'pro' ? { backgroundColor: 'var(--c-brand)' } : undefined}
                     >
                       {u.plan === 'pro' ? 'Pro' : 'Free'}
                     </span>

@@ -105,7 +105,7 @@ export default async function ExportPage() {
               Excel 내보내기 및 무제한 PDF는{' '}
               <Link
                 href="/settings"
-                className="underline text-[#800020] dark:text-[#cc3355] font-medium hover:opacity-80"
+                className="underline text-[var(--c-brand)] dark:text-[#cc3355] font-medium hover:opacity-80"
               >
                 Pro 업그레이드
               </Link>{' '}

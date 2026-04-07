@@ -8,6 +8,8 @@ export const metadata: Metadata = {
   description: '증상 악화 원인을 추적하고 패턴을 파악하세요.',
 };
 
+export const revalidate = 0;
+
 export default async function TriggersPage() {
   const today = new Date().toISOString().split('T')[0];
   const existing = await getTriggerLogByDate(today);
@@ -21,9 +23,9 @@ export default async function TriggersPage() {
             <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
         </Link>
-        <div>
-          <h1 className="text-xl font-bold text-gray-800">트리거 기록</h1>
-          <p className="text-xs text-gray-400 mt-0.5">
+        <div className="flex-1">
+          <h1 className="text-xl font-bold text-gray-800 dark:text-gray-100">트리거 기록</h1>
+          <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
             {new Date().toLocaleDateString('ko-KR', {
               month: 'long',
               day: 'numeric',
@@ -32,19 +34,26 @@ export default async function TriggersPage() {
             {existing && ' · 오늘 기록 있음'}
           </p>
         </div>
+        <Link
+          href="/triggers/history"
+          className="flex-shrink-0 px-3 py-1.5 rounded-xl text-xs font-medium border"
+          style={{ color: 'var(--c-brand)', borderColor: 'var(--c-brand-light)', backgroundColor: 'var(--c-brand-subtle)' }}
+        >
+          기록 보기
+        </Link>
       </div>
 
       {/* 안내 배너 */}
       <div
-        className="flex items-start gap-3 p-4 rounded-2xl"
-        style={{ backgroundColor: '#fdf6f7', border: '1px solid #f9d0d7' }}
+        className="brand-bg flex items-start gap-3 p-4 rounded-2xl border border-[#f9d0d7] dark:border-[#5a2a30]"
+        style={{ backgroundColor: 'var(--c-brand-subtle)' }}
       >
         <span className="text-2xl leading-none">🎯</span>
         <div>
-          <p className="text-sm font-semibold" style={{ color: '#800020' }}>
+          <p className="text-sm font-semibold" style={{ color: 'var(--c-brand)' }}>
             증상 악화 원인 추적
           </p>
-          <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
             오늘 겪은 트리거를 선택하면 증상과의 연관성을 파악할 수 있어요.
             날짜별로 1회 기록되며 수정 가능합니다.
           </p>
@@ -53,8 +62,8 @@ export default async function TriggersPage() {
 
       {/* 기존 기록 요약 */}
       {existing && (
-        <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-50 space-y-1.5">
-          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">오늘의 기록</p>
+        <div className="bg-white dark:bg-gray-900 rounded-2xl p-4 shadow-sm dark:shadow-none border border-gray-50 dark:border-gray-700 space-y-1.5">
+          <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">오늘의 기록</p>
           <div className="flex flex-wrap gap-2">
             {existing.caffeine_cups > 0 && (
               <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
@@ -93,7 +102,7 @@ export default async function TriggersPage() {
             )}
           </div>
           {existing.note && (
-            <p className="text-xs text-gray-500 pt-1">
+            <p className="text-xs text-gray-500 dark:text-gray-400 pt-1">
               {existing.note.replace(/#날씨/g, '').replace(/#기타/g, '').trim()}
             </p>
           )}

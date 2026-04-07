@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from 'next';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import { ThemeProvider } from '@/components/ThemeProvider';
+import { GoogleAnalytics } from '@/components/GoogleAnalytics';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -43,16 +43,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ko">
       <head>
-        <link rel="icon" href="/icons/icon-192x192.png" />
-        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="icon" href="/icons/icon-192x192.png?v=2" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png?v=2" />
         <meta name="mobile-web-app-capable" content="yes" />
       </head>
       <body>
+        <GoogleAnalytics />
         <ThemeProvider>{children}</ThemeProvider>
       </body>
-      {process.env.NEXT_PUBLIC_GA_ID && (
-        <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
-      )}
     </html>
   );
 }

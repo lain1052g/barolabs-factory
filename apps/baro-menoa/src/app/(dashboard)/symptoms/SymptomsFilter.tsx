@@ -21,7 +21,7 @@ export function SymptomsFilter({ current }: { current: FilterRange }) {
           onClick={() => router.push(`/symptoms?filter=${f.value}`)}
           className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors"
           style={{
-            backgroundColor: current === f.value ? '#800020' : '#f3f4f6',
+            backgroundColor: current === f.value ? 'var(--c-brand)' : '#f3f4f6',
             color: current === f.value ? 'white' : '#6b7280',
           }}
         >

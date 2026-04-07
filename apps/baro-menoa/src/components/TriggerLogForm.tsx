@@ -121,7 +121,7 @@ export function TriggerLogForm({ existing, date }: Props) {
                 onClick={() => toggleCategory(cat.key)}
                 className="flex items-start gap-2.5 p-3 rounded-xl border-2 text-left transition-all"
                 style={{
-                  borderColor: isSelected ? '#800020' : '#e5e7eb',
+                  borderColor: isSelected ? 'var(--c-brand)' : '#e5e7eb',
                   backgroundColor: isSelected ? '#fdf6f7' : 'white',
                 }}
               >
@@ -129,7 +129,7 @@ export function TriggerLogForm({ existing, date }: Props) {
                 <div>
                   <p
                     className="text-sm font-semibold leading-tight"
-                    style={{ color: isSelected ? '#800020' : '#374151' }}
+                    style={{ color: isSelected ? 'var(--c-brand)' : '#374151' }}
                   >
                     {cat.label}
                   </p>
@@ -153,7 +153,7 @@ export function TriggerLogForm({ existing, date }: Props) {
             >
               −
             </button>
-            <span className="text-2xl font-bold w-8 text-center" style={{ color: '#800020' }}>
+            <span className="text-2xl font-bold w-8 text-center" style={{ color: 'var(--c-brand)' }}>
               {caffeineCups}
             </span>
             <button
@@ -180,7 +180,7 @@ export function TriggerLogForm({ existing, date }: Props) {
             >
               −
             </button>
-            <span className="text-2xl font-bold w-8 text-center" style={{ color: '#800020' }}>
+            <span className="text-2xl font-bold w-8 text-center" style={{ color: 'var(--c-brand)' }}>
               {alcoholUnits}
             </span>
             <button
@@ -208,7 +208,7 @@ export function TriggerLogForm({ existing, date }: Props) {
                 onClick={() => setStressLevel(n)}
                 className="flex-1 h-10 rounded-xl text-sm font-bold transition-all"
                 style={{
-                  backgroundColor: stressLevel === n ? '#800020' : '#f3f4f6',
+                  backgroundColor: stressLevel === n ? 'var(--c-brand)' : '#f3f4f6',
                   color: stressLevel === n ? 'white' : '#9ca3af',
                 }}
               >
@@ -235,7 +235,7 @@ export function TriggerLogForm({ existing, date }: Props) {
                 onClick={() => setExerciseMinutes(m)}
                 className="px-3 py-1.5 rounded-full text-sm font-medium transition-all"
                 style={{
-                  backgroundColor: exerciseMinutes === m ? '#800020' : '#f3f4f6',
+                  backgroundColor: exerciseMinutes === m ? 'var(--c-brand)' : '#f3f4f6',
                   color: exerciseMinutes === m ? 'white' : '#6b7280',
                 }}
               >
@@ -258,7 +258,7 @@ export function TriggerLogForm({ existing, date }: Props) {
           maxLength={300}
           rows={2}
           className="w-full px-3 py-2 rounded-xl border border-gray-200 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 placeholder:text-gray-300"
-          style={{ '--tw-ring-color': '#800020' } as React.CSSProperties}
+          style={{ '--tw-ring-color': 'var(--c-brand)' } as React.CSSProperties}
         />
         <p className="text-right text-[10px] text-gray-300 mt-0.5">{note.length}/300</p>
       </div>
@@ -274,7 +274,7 @@ export function TriggerLogForm({ existing, date }: Props) {
         type="submit"
         disabled={isPending || selected.size === 0}
         className="w-full h-12 rounded-2xl text-white text-sm font-semibold disabled:opacity-40 transition-opacity"
-        style={{ backgroundColor: '#800020' }}
+        style={{ backgroundColor: 'var(--c-brand)' }}
       >
         {isPending ? '저장 중...' : existing ? '수정 저장' : '트리거 기록 저장'}
       </button>

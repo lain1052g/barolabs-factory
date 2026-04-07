@@ -6,12 +6,12 @@
   "regions": ["icn1"],
   "crons": [
     {
-      "path": "/api/cron/weekly-report",
-      "schedule": "0 0 * * 1"
+      "path": "/api/cron/send-notification",
+      "schedule": "0 2 * * *"
     },
     {
-      "path": "/api/cron/daily-reminder",
-      "schedule": "0 11 * * *"
+      "path": "/api/cron/reset-upload-count",
+      "schedule": "0 0 1 * *"
     }
   ]
 }

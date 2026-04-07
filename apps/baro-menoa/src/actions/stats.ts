@@ -10,6 +10,7 @@ import {
 import { createClient } from '@/lib/supabase/server';
 import { eq, and, isNull, gte, lte, sql } from 'drizzle-orm';
 import { redirect } from 'next/navigation';
+import { isProPlan } from '@/lib/plan';
 
 // ─── 반환 타입 정의 ────────────────────────────────────
 
@@ -79,14 +80,14 @@ export async function getSymptomStats(): Promise<SymptomStatsResult> {
 
   // 플랜 조회
   const [dbUser] = await db
-    .select({ plan: menoa_users.plan })
+    .select({ plan: menoa_users.plan, pro_expires_at: menoa_users.pro_expires_at })
     .from(menoa_users)
     .where(eq(menoa_users.supabase_id, user.id))
     .limit(1);
 
   if (!dbUser) redirect('/login');
 
-  const plan = (dbUser.plan ?? 'free') as 'free' | 'pro';
+  const plan = isProPlan(dbUser.plan, dbUser.pro_expires_at) ? 'pro' : 'free' as 'free' | 'pro';
   const periodMonths = plan === 'free' ? 1 : 12;
 
   const fromDate = getFromDate(plan);

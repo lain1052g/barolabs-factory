@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server';
+import { isAdmin } from '@/lib/admin';
 import { redirect } from 'next/navigation';
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  if (!user || user.email !== process.env.ADMIN_EMAIL) {
+  if (!user || !isAdmin(user.email)) {
     redirect('/dashboard');
   }
 
@@ -15,7 +16,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3">
           <span
             className="text-xs font-bold px-2 py-0.5 rounded text-white"
-            style={{ backgroundColor: '#800020' }}
+            style={{ backgroundColor: 'var(--c-brand)' }}
           >
             ADMIN
           </span>

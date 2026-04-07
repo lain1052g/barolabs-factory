@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { recordSosUsage } from '@/actions/sos';
+import { analytics } from '@/lib/analytics';
 
 const SOS_CONTENT = [
   {
@@ -60,6 +61,7 @@ export function SosClient() {
 
   useEffect(() => {
     recordSosUsage('general', active.id);
+    analytics.sosUsed(active.id);
   }, [activeIdx, active.id]);
 
   return (
@@ -68,12 +70,12 @@ export function SosClient() {
       <div className="text-center">
         <div
           className="w-16 h-16 rounded-full mx-auto flex items-center justify-center text-3xl mb-3"
-          style={{ backgroundColor: '#fdf6f7', border: '2px solid #800020' }}
+          style={{ backgroundColor: 'var(--c-brand-subtle)', border: '2px solid var(--c-brand)' }}
         >
           🆘
         </div>
-        <h1 className="text-xl font-bold" style={{ color: '#800020' }}>괜찮아요, 도와드릴게요</h1>
-        <p className="text-sm text-gray-500 mt-1">지금 바로 사용할 수 있는 대처법이에요</p>
+        <h1 className="text-xl font-bold" style={{ color: 'var(--c-brand)' }}>괜찮아요, 도와드릴게요</h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">지금 바로 사용할 수 있는 대처법이에요</p>
       </div>
 
       {/* 카테고리 선택 */}
@@ -84,7 +86,7 @@ export function SosClient() {
             onClick={() => setActiveIdx(i)}
             className="flex-shrink-0 flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-medium transition-colors"
             style={{
-              backgroundColor: activeIdx === i ? '#800020' : '#f3f4f6',
+              backgroundColor: activeIdx === i ? 'var(--c-brand)' : '#f3f4f6',
               color: activeIdx === i ? 'white' : '#6b7280',
             }}
           >
@@ -95,10 +97,10 @@ export function SosClient() {
       </div>
 
       {/* 콘텐츠 카드 */}
-      <div className="bg-white rounded-2xl p-6 shadow-sm space-y-4">
+      <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 shadow-sm dark:shadow-none space-y-4">
         <div className="flex items-center gap-3">
           <span className="text-3xl">{active.emoji}</span>
-          <h2 className="text-lg font-bold text-gray-800">{active.title}</h2>
+          <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">{active.title}</h2>
         </div>
 
         <div className="space-y-3">
@@ -106,18 +108,18 @@ export function SosClient() {
             <div key={i} className="flex gap-3">
               <div
                 className="w-7 h-7 rounded-full flex-shrink-0 flex items-center justify-center text-sm font-bold text-white"
-                style={{ backgroundColor: '#800020' }}
+                style={{ backgroundColor: 'var(--c-brand)' }}
               >
                 {i + 1}
               </div>
-              <p className="text-sm text-gray-700 pt-1">{step}</p>
+              <p className="text-sm text-gray-700 dark:text-gray-200 pt-1">{step}</p>
             </div>
           ))}
         </div>
 
         <div
-          className="mt-4 p-3 rounded-xl text-sm text-gray-600"
-          style={{ backgroundColor: '#fdf6f7' }}
+          className="brand-bg mt-4 p-3 rounded-xl text-sm text-gray-600 dark:text-gray-300"
+          style={{ backgroundColor: 'var(--c-brand-subtle)' }}
         >
           💡 {active.tip}
         </div>
@@ -126,13 +128,13 @@ export function SosClient() {
       {/* 다음 방법 */}
       <button
         onClick={() => setActiveIdx((activeIdx + 1) % SOS_CONTENT.length)}
-        className="w-full py-3 rounded-xl border text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+        className="w-full py-3 rounded-xl border text-sm font-medium text-gray-600 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors border-gray-200 dark:border-gray-700"
         style={{ borderColor: '#e5e7eb' }}
       >
         다른 방법 보기 →
       </button>
 
-      <p className="text-center text-xs text-gray-400">
+      <p className="text-center text-xs text-gray-400 dark:text-gray-500">
         * 이 정보는 의료적 조언을 대체하지 않습니다.<br />심각한 증상은 반드시 의사와 상담하세요.
       </p>
     </div>

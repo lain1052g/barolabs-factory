@@ -15,6 +15,35 @@ import { redirect } from 'next/navigation';
 import { renderToBuffer, type DocumentProps } from '@react-pdf/renderer';
 import React from 'react';
 import { SymptomReport, type SymptomLogRow } from '@/lib/pdf/SymptomReport';
+import { VisitReport } from '@/lib/pdf/VisitReport';
+import type { VisitSummaryData } from '@/actions/visit-summary';
+import { z } from 'zod';
+
+const dateString = z
+  .string()
+  .regex(/^\d{4}-\d{2}-\d{2}$/, '날짜 형식이 올바르지 않습니다. (YYYY-MM-DD)');
+
+const exportDateRangeSchema = z
+  .object({
+    fromDate: dateString,
+    toDate: dateString,
+  })
+  .refine((d) => d.fromDate <= d.toDate, {
+    message: '시작일이 종료일보다 늦을 수 없습니다.',
+    path: ['fromDate'],
+  })
+  .refine(
+    (d) => {
+      const diffDays =
+        (new Date(d.toDate).getTime() - new Date(d.fromDate).getTime()) /
+        (1000 * 60 * 60 * 24);
+      return diffDays <= 366;
+    },
+    {
+      message: '최대 1년 범위까지 내보낼 수 있습니다.',
+      path: ['toDate'],
+    },
+  );
 
 // ── 공통: 현재 사용자 + 로그 조회 ────────────────────────────────
 async function fetchLogsForExport(fromDate: string, toDate: string) {
@@ -61,21 +90,11 @@ async function fetchLogsForExport(fromDate: string, toDate: string) {
   return { dbUser, logs };
 }
 
-// ── 날짜 유효성 검증 ──────────────────────────────────────────────
+// ── 날짜 유효성 검증 (Zod 래퍼) ──────────────────────────────────
 function validateDateRange(fromDate: string, toDate: string): string | null {
-  const datePattern = /^\d{4}-\d{2}-\d{2}$/;
-  if (!datePattern.test(fromDate) || !datePattern.test(toDate)) {
-    return '날짜 형식이 올바르지 않습니다. (YYYY-MM-DD)';
-  }
-  if (fromDate > toDate) {
-    return '시작일이 종료일보다 늦을 수 없습니다.';
-  }
-  // 최대 1년 범위
-  const from = new Date(fromDate);
-  const to = new Date(toDate);
-  const diffDays = (to.getTime() - from.getTime()) / (1000 * 60 * 60 * 24);
-  if (diffDays > 366) {
-    return '최대 1년 범위까지 내보낼 수 있습니다.';
+  const result = exportDateRangeSchema.safeParse({ fromDate, toDate });
+  if (!result.success) {
+    return result.error.errors[0]?.message ?? '입력값이 올바르지 않습니다.';
   }
   return null;
 }
@@ -118,6 +137,11 @@ export async function generateSymptomPDF(
     note: l.note,
   }));
 
+  // 데이터 없으면 PDF 생성 시도하지 않음
+  if (logRows.length === 0) {
+    return { error: '선택한 기간에 기록된 증상이 없어요. 기간을 바꿔서 다시 시도해 보세요.' };
+  }
+
   // PDF 렌더링
   let pdfBuffer: Buffer;
   try {
@@ -148,6 +172,29 @@ export async function generateSymptomPDF(
   return { data: base64, filename };
 }
 
+// ── 진료 요약 PDF 생성 ─────────────────────────────────────────────
+export async function generateVisitPDF(
+  data: VisitSummaryData,
+): Promise<{ data: string; filename: string } | { error: string }> {
+  if (data.symptoms.length === 0 && !data.triggers && !data.mood) {
+    return { error: '기록된 데이터가 없어 PDF를 생성할 수 없어요.' };
+  }
+
+  let pdfBuffer: Buffer;
+  try {
+    pdfBuffer = await renderToBuffer(
+      React.createElement(VisitReport, { data }) as React.ReactElement<DocumentProps>,
+    );
+  } catch {
+    return { error: 'PDF 생성 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요.' };
+  }
+
+  const base64 = Buffer.from(pdfBuffer).toString('base64');
+  const filename = `메노아_진료요약_${data.periodFrom}_${data.periodTo}.pdf`;
+
+  return { data: base64, filename };
+}
+
 // ── Excel 생성 ───────────────────────────────────────────────────
 export async function generateSymptomExcel(
   fromDate: string,
@@ -164,6 +211,11 @@ export async function generateSymptomExcel(
     return {
       error: 'Excel 다운로드는 Pro 플랜 전용 기능입니다.',
     };
+  }
+
+  // 데이터 없으면 Excel 생성 시도하지 않음
+  if (logs.length === 0) {
+    return { error: '선택한 기간에 기록된 증상이 없어요. 기간을 바꿔서 다시 시도해 보세요.' };
   }
 
   // xlsx 동적 임포트 (서버 전용)

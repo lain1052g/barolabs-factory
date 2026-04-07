@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import { useState, useEffect } from 'react';
 
 interface BeforeInstallPromptEvent extends Event {
@@ -60,11 +61,8 @@ export function InstallBanner() {
     <div className="fixed bottom-20 left-4 right-4 z-50 bg-white rounded-2xl shadow-lg border border-gray-100 p-4">
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-center gap-3">
-          <div
-            className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold text-sm"
-            style={{ backgroundColor: '#800020' }}
-          >
-            메
+          <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 overflow-hidden bg-white border border-gray-100">
+            <Image src="/br-s15-menoa.svg" alt="메노아" width={36} height={36} />
           </div>
           <div>
             <p className="font-semibold text-gray-800 text-sm">홈 화면에 추가하기</p>
@@ -82,7 +80,7 @@ export function InstallBanner() {
             <button
               onClick={handleInstall}
               className="px-3 py-1.5 rounded-lg text-xs font-medium text-white"
-              style={{ backgroundColor: '#800020' }}
+              style={{ backgroundColor: 'var(--c-brand)' }}
             >
               설치
             </button>

@@ -29,7 +29,7 @@ export function OnboardingForm() {
               className="sr-only peer"
               defaultChecked={i === 1}
             />
-            <div className="peer-checked:border-[#800020] peer-checked:bg-[#800020]/5 border-2 border-gray-200 rounded-2xl p-4 transition-all">
+            <div className="peer-checked:border-[var(--c-brand)] peer-checked:bg-[var(--c-brand)]/5 border-2 border-gray-200 rounded-2xl p-4 transition-all">
               <p className="font-semibold text-gray-800 text-sm">{label}</p>
               <p className="text-xs text-gray-500 mt-0.5">{desc}</p>
             </div>
@@ -47,15 +47,27 @@ export function OnboardingForm() {
           id="last_period_date"
           name="last_period_date"
           max={new Date().toISOString().split('T')[0]}
-          className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 focus:outline-none focus:border-[#800020]"
+          className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-700 focus:outline-none focus:border-[var(--c-brand)]"
         />
       </div>
+
+      {/* 이메일 수신 동의 */}
+      <label className="flex items-start gap-3 cursor-pointer">
+        <input
+          type="checkbox"
+          name="email_marketing"
+          className="mt-0.5 w-4 h-4 accent-[var(--c-brand)]"
+        />
+        <span className="text-xs text-gray-500 leading-relaxed">
+          주간 건강 요약 등 유용한 정보를 이메일로 받겠습니다. (선택)
+        </span>
+      </label>
 
       <button
         type="submit"
         disabled={isPending}
         className="w-full py-3.5 rounded-2xl text-sm font-semibold text-white disabled:opacity-60"
-        style={{ backgroundColor: '#800020' }}
+        style={{ backgroundColor: 'var(--c-brand)' }}
       >
         {isPending ? '저장 중...' : '시작하기'}
       </button>

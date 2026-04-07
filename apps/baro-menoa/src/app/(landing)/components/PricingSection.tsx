@@ -59,7 +59,7 @@ export function PricingSection() {
             </span>
             <h3 className="text-xl font-bold">Pro</h3>
             <div className="mt-3">
-              <span className="text-4xl font-bold">₩9,900</span>
+              <span className="text-4xl font-bold">₩4,900</span>
             </div>
             <p className="text-sm opacity-70 mt-1">월 구독</p>
 

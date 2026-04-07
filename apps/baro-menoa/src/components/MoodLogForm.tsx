@@ -3,6 +3,7 @@
 import { useState, useTransition } from 'react';
 import { saveMoodLog } from '@/actions/mood';
 import type { MenoaMoodLog } from '@/db/schema';
+import { analytics } from '@/lib/analytics';
 
 type MoodOption = {
   score: number;
@@ -48,6 +49,8 @@ export function MoodLogForm({ existing, date }: Props) {
         setError(result.error);
       } else {
         setSuccess(true);
+        // GA4: 기분 기록 성공 이벤트
+        analytics.moodLogged(selectedScore);
       }
     });
   }
@@ -75,7 +78,7 @@ export function MoodLogForm({ existing, date }: Props) {
                   {mood.emoji}
                 </span>
                 {isSelected && (
-                  <span className="text-[10px] font-semibold" style={{ color: '#800020' }}>
+                  <span className="text-[10px] font-semibold" style={{ color: 'var(--c-brand)' }}>
                     {mood.label}
                   </span>
                 )}
@@ -92,7 +95,7 @@ export function MoodLogForm({ existing, date }: Props) {
                 key={mood.score}
                 className="flex-1 transition-all"
                 style={{
-                  backgroundColor: mood.score <= selectedScore ? '#800020' : 'transparent',
+                  backgroundColor: mood.score <= selectedScore ? 'var(--c-brand)' : 'transparent',
                   opacity: mood.score <= selectedScore ? (0.4 + mood.score * 0.12) : 1,
                 }}
               />
@@ -117,7 +120,7 @@ export function MoodLogForm({ existing, date }: Props) {
           maxLength={500}
           rows={3}
           className="w-full px-3 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 resize-none focus:outline-none focus:ring-2 placeholder:text-gray-300"
-          style={{ '--tw-ring-color': '#800020' } as React.CSSProperties}
+          style={{ '--tw-ring-color': 'var(--c-brand)' } as React.CSSProperties}
         />
         <p className="text-right text-[10px] text-gray-300 mt-0.5">{note.length}/500</p>
       </div>
@@ -133,7 +136,7 @@ export function MoodLogForm({ existing, date }: Props) {
         type="submit"
         disabled={isPending}
         className="w-full h-12 rounded-2xl text-white text-sm font-semibold disabled:opacity-40 transition-opacity"
-        style={{ backgroundColor: '#800020' }}
+        style={{ backgroundColor: 'var(--c-brand)' }}
       >
         {isPending ? '저장 중...' : existing ? '기분 수정' : '기분 기록 저장'}
       </button>

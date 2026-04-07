@@ -10,6 +10,7 @@ import { z } from 'zod';
 const onboardingSchema = z.object({
   menopause_stage: z.enum(['pre', 'peri', 'post']),
   last_period_date: z.string().optional(),
+  email_marketing: z.boolean().optional(),
 });
 
 export async function saveOnboarding(
@@ -23,6 +24,7 @@ export async function saveOnboarding(
   const parsed = onboardingSchema.safeParse({
     menopause_stage: formData.get('menopause_stage'),
     last_period_date: formData.get('last_period_date') || undefined,
+    email_marketing: formData.get('email_marketing') === 'on',
   });
   if (!parsed.success) return { error: '입력값을 확인해주세요.' };
 
@@ -31,6 +33,7 @@ export async function saveOnboarding(
     .set({
       menopause_stage: parsed.data.menopause_stage,
       last_period_date: parsed.data.last_period_date ?? null,
+      email_marketing_agreed: parsed.data.email_marketing ?? false,
       updated_at: new Date(),
     })
     .where(eq(menoa_users.supabase_id, user.id));

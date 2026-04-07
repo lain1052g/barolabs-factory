@@ -59,7 +59,7 @@ export async function GET(request: Request) {
     }
 
     await db.insert(menoa_users)
-      .values({ supabase_id: supabaseUserId, email, name })
+      .values({ supabase_id: supabaseUserId, email, name, pro_expires_at: new Date('2026-12-31T23:59:59Z') })
       .onConflictDoUpdate({
         target: menoa_users.supabase_id,
         set: { email, name, updated_at: new Date() },

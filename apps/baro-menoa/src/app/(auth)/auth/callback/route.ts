@@ -26,6 +26,7 @@ export async function GET(request: Request) {
           supabase_id: data.user.id,
           email: data.user.email!,
           name: data.user.user_metadata?.full_name ?? null,
+          pro_expires_at: new Date('2026-12-31T23:59:59Z'),
         })
         .onConflictDoUpdate({
           target: menoa_users.supabase_id,
@@ -44,7 +45,7 @@ export async function GET(request: Request) {
       if (!existing) {
         sendWelcomeEmail(
           data.user.email!,
-          data.user.user_metadata?.full_name ?? '',
+          data.user.user_metadata?.full_name ?? undefined,
         ).catch((err) => console.error('[callback] sendWelcomeEmail failed:', err));
       }
       return NextResponse.redirect(`${origin}${destination}`);

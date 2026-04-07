@@ -49,7 +49,7 @@ export function ProfileForm({ name, birth_year, menopause_stage, last_period_dat
           maxLength={50}
           required
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 placeholder:text-gray-300"
-          style={{ '--tw-ring-color': '#800020' } as React.CSSProperties}
+          style={{ '--tw-ring-color': 'var(--c-brand)' } as React.CSSProperties}
         />
       </div>
 
@@ -64,7 +64,7 @@ export function ProfileForm({ name, birth_year, menopause_stage, last_period_dat
           min={1930}
           max={new Date().getFullYear() - 30}
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2 placeholder:text-gray-300"
-          style={{ '--tw-ring-color': '#800020' } as React.CSSProperties}
+          style={{ '--tw-ring-color': 'var(--c-brand)' } as React.CSSProperties}
         />
       </div>
 
@@ -80,13 +80,13 @@ export function ProfileForm({ name, birth_year, menopause_stage, last_period_dat
               onClick={() => setSelectedStage(opt.value)}
               className="py-2.5 px-2 rounded-xl border-2 text-left transition-all"
               style={{
-                borderColor: selectedStage === opt.value ? '#800020' : '#e5e7eb',
+                borderColor: selectedStage === opt.value ? 'var(--c-brand)' : '#e5e7eb',
                 backgroundColor: selectedStage === opt.value ? '#fdf6f7' : 'white',
               }}
             >
               <p
                 className="text-xs font-semibold"
-                style={{ color: selectedStage === opt.value ? '#800020' : '#374151' }}
+                style={{ color: selectedStage === opt.value ? 'var(--c-brand)' : '#374151' }}
               >
                 {opt.label}
               </p>
@@ -105,7 +105,7 @@ export function ProfileForm({ name, birth_year, menopause_stage, last_period_dat
           defaultValue={last_period_date ?? ''}
           max={new Date().toISOString().split('T')[0]}
           className="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-800 focus:outline-none focus:ring-2"
-          style={{ '--tw-ring-color': '#800020' } as React.CSSProperties}
+          style={{ '--tw-ring-color': 'var(--c-brand)' } as React.CSSProperties}
         />
         <p className="text-[11px] text-gray-400 mt-1">입력하지 않아도 됩니다</p>
       </div>
@@ -114,7 +114,7 @@ export function ProfileForm({ name, birth_year, menopause_stage, last_period_dat
         type="submit"
         disabled={pending}
         className="w-full h-12 rounded-xl text-white text-sm font-semibold disabled:opacity-50 transition-opacity"
-        style={{ backgroundColor: '#800020' }}
+        style={{ backgroundColor: 'var(--c-brand)' }}
       >
         {pending ? '저장 중...' : '프로필 저장'}
       </button>

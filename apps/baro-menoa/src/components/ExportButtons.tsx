@@ -138,7 +138,7 @@ export function ExportButtons({ userPlan }: ExportButtonsProps) {
               className={[
                 'px-3 py-1.5 rounded-lg text-sm font-medium transition-colors',
                 preset === p.value
-                  ? 'bg-[#800020] text-white'
+                  ? 'bg-[var(--c-brand)] text-white'
                   : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700',
               ].join(' ')}
             >
@@ -160,7 +160,7 @@ export function ExportButtons({ userPlan }: ExportButtonsProps) {
                 setPdfError(null);
                 setExcelError(null);
               }}
-              className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#800020]/30 focus:border-[#800020]"
+              className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--c-brand)]/30 focus:border-[var(--c-brand)]"
             />
           </div>
           <div className="flex items-end pb-2 text-gray-400">~</div>
@@ -175,7 +175,7 @@ export function ExportButtons({ userPlan }: ExportButtonsProps) {
                 setPdfError(null);
                 setExcelError(null);
               }}
-              className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[#800020]/30 focus:border-[#800020]"
+              className="w-full px-3 py-2 text-sm border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--c-brand)]/30 focus:border-[var(--c-brand)]"
             />
           </div>
         </div>
@@ -209,7 +209,7 @@ export function ExportButtons({ userPlan }: ExportButtonsProps) {
           type="button"
           onClick={handlePdfDownload}
           disabled={pdfLoading}
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[#800020] hover:bg-[#600018] disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-[var(--c-brand)] hover:bg-[#600018] disabled:opacity-60 disabled:cursor-not-allowed text-white text-sm font-medium transition-colors"
         >
           {pdfLoading ? (
             <>

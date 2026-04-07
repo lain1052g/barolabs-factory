@@ -7,10 +7,23 @@ import { db } from '@/db';
 import { menoa_users, menoa_symptom_logs, menoa_symptoms } from '@/db/schema';
 import { eq, sql } from 'drizzle-orm';
 import { createElement } from 'react';
+import { z } from 'zod';
 
-const FROM_ADDRESS = 'noreply@menoa.barolabs.kr';
+const FROM_ADDRESS = 'noreply@barolabs.kr';
 
-export async function sendWelcomeEmail(email: string, name: string) {
+const sendWelcomeEmailSchema = z.object({
+  email: z.string().email('유효하지 않은 이메일 주소입니다.'),
+  name: z.string().max(100).optional(),
+});
+
+const sendWeeklyReportSchema = z.object({
+  userId: z.string().min(1, '유효하지 않은 사용자 ID입니다.'),
+});
+
+export async function sendWelcomeEmail(email: string, name?: string) {
+  const parsed = sendWelcomeEmailSchema.safeParse({ email, name: name || undefined });
+  if (!parsed.success) return { success: false, error: '입력값이 올바르지 않습니다.' };
+
   try {
     const { error } = await getResend().emails.send({
       from: `메노아 <${FROM_ADDRESS}>`,
@@ -32,6 +45,9 @@ export async function sendWelcomeEmail(email: string, name: string) {
 }
 
 export async function sendWeeklyReport(userId: string) {
+  const parsed = sendWeeklyReportSchema.safeParse({ userId });
+  if (!parsed.success) return { success: false, error: '입력값이 올바르지 않습니다.' };
+
   // 1. 유저 정보 조회
   const [user] = await db
     .select({ email: menoa_users.email, name: menoa_users.name })

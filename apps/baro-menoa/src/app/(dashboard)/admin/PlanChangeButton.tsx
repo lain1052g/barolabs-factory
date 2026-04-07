@@ -26,7 +26,7 @@ export function PlanChangeButton({ userId, currentPlan }: Props) {
       className="text-xs px-2.5 py-1 rounded border font-medium transition-colors disabled:opacity-50"
       style={
         nextPlan === 'pro'
-          ? { borderColor: '#800020', color: '#800020' }
+          ? { borderColor: 'var(--c-brand)', color: 'var(--c-brand)' }
           : { borderColor: '#6b7280', color: '#6b7280' }
       }
     >
