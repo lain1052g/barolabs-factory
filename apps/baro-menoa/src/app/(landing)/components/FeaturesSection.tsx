@@ -9,7 +9,7 @@ const features = [
   {
     icon: '🆘',
     title: 'SOS 대처법',
-    desc: '증상이 심할 때 즉각적으로 사용할 수 있는 4가지 과학적 완화 기법을 제공합니다.',
+    desc: '증상이 심할 때 바로 따라 할 수 있는 4가지 대처법을 안내합니다.',
     badge: '무료',
     badgeColor: '#6b7280',
   },
@@ -23,7 +23,7 @@ const features = [
   {
     icon: '😊',
     title: '기분 & 트리거 기록',
-    desc: '수면, 카페인, 스트레스 등 트리거와 기분을 함께 기록해 증상의 원인을 찾으세요.',
+    desc: '수면, 카페인, 스트레스 등 생활 요인과 기분을 함께 기록해 나만의 패턴을 파악하세요.',
     badge: 'Pro',
     badgeColor: '#800020',
   },
@@ -52,7 +52,7 @@ export function FeaturesSection() {
             갱년기 관리에 필요한 모든 것
           </h2>
           <p className="mt-4 text-gray-500 max-w-xl mx-auto">
-            의학적으로 검증된 방법으로 증상을 추적하고, 패턴을 이해하고, 더 나은 삶을 만들어가세요.
+            매일 증상을 기록하고, 나만의 패턴을 이해하고, 더 나은 하루를 만들어가세요.
           </p>
         </div>
 

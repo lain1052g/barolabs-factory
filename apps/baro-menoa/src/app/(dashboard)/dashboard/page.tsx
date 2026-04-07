@@ -229,7 +229,7 @@ export default async function DashboardPage() {
               <p className="text-xs text-gray-400 dark:text-gray-500">오늘의 트리거</p>
               <InfoIcon
                 title="트리거란?"
-                body={'증상을 악화시킬 수 있는 생활 요인이에요.\n\n☕ 카페인 — 안면홍조 빈도를 높일 수 있어요\n🍷 음주 — 혈관 확장으로 발한 유발\n😤 스트레스 — 호르몬 불균형 악화\n😴 수면 부족 — 야간발한 후 피로 가중\n🏃 운동 — 규칙적이면 증상 완화에 도움\n🌡️ 날씨 — 고온 환경이 안면홍조 유발\n\n매일 기록하면 나만의 패턴을 찾을 수 있어요.'}
+                body={'증상에 영향을 줄 수 있는 생활 요인을 기록해요.\n\n☕ 카페인\n🍷 음주\n😤 스트레스\n😴 수면 시간\n🏃 운동\n🌡️ 날씨\n\n매일 기록하면 나만의 패턴을 찾을 수 있어요.'}
                 evidenceId="triggers"
               />
             </div>
@@ -400,7 +400,7 @@ export default async function DashboardPage() {
         className="rounded-2xl p-4 space-y-1.5"
         style={{ backgroundColor: 'var(--c-brand-subtle)', border: '1px solid #f5c6cc' }}
       >
-        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">오늘의 팁</p>
+        <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">오늘의 건강 상식</p>
         <div className="flex items-start gap-2.5">
           <span className="text-xl flex-shrink-0 mt-0.5">{tip.emoji}</span>
           <div>
@@ -408,6 +408,7 @@ export default async function DashboardPage() {
             <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 leading-relaxed">{tip.body}</p>
           </div>
         </div>
+        <p className="text-[10px] text-gray-300 dark:text-gray-600 mt-1">일반적인 건강 상식이며 의학적 조언이 아닙니다</p>
       </div>
     </div>
   );

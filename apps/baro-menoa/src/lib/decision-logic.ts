@@ -242,7 +242,7 @@ export const DIAGNOSES: Diagnosis[] = [
   {
     id: 'D08',
     level: 2,
-    title: '골다공증 + 관절·근육 증상 악화',
+    title: '골다공증 + 관절·근육 증상 증가',
     description: '뼈·관절 건강 전문의 확인 필요',
     rules: [
       '골다공증 지병 체크 + 관절/근육통 심각도 3점 이상 × 2주',
@@ -302,7 +302,7 @@ export const DIAGNOSES: Diagnosis[] = [
     id: 'D13',
     level: 3,
     title: '스트레스 트리거 상관관계 높음',
-    description: '스트레스 높은 날 전반적 증상 악화',
+    description: '스트레스 높은 날 전반적 증상 점수가 높음',
     rules: [
       '스트레스 4~5점인 날의 전체 증상 평균 심각도 > 1~2점인 날보다 1점 이상 높음 (30일)',
     ],
@@ -312,7 +312,7 @@ export const DIAGNOSES: Diagnosis[] = [
   {
     id: 'D14',
     level: 3,
-    title: '수면 부족 → 다음날 증상 악화 패턴',
+    title: '수면 부족 → 다음날 증상 점수 높음',
     description: '수면 시간과 다음날 증상 심각도 역상관',
     rules: [
       '수면 6시간 미만 다음날 전체 증상 평균 > 7시간+ 다음날보다 유의미하게 높음 (30일)',
@@ -324,7 +324,7 @@ export const DIAGNOSES: Diagnosis[] = [
     id: 'D15',
     level: 3,
     title: '운동 부족',
-    description: '주간 운동 기록 없는 주에 증상 악화 경향',
+    description: '주간 운동 기록이 없는 상태',
     rules: [
       '운동 기록 주 150분 미만 × 3주 연속',
     ],
@@ -346,7 +346,7 @@ export const DIAGNOSES: Diagnosis[] = [
     id: 'D17',
     level: 3,
     title: '이소플라본 미섭취 + 안면홍조 잦음',
-    description: '식이 이소플라본 섭취 증가로 증상 완화 가능',
+    description: '이소플라본 식품 섭취를 늘려볼 수 있는 상황',
     rules: [
       '이소플라본 미복용 + 유방암 과거력 없음 + 안면홍조 주 3회 이상',
     ],
@@ -369,7 +369,7 @@ export const DIAGNOSES: Diagnosis[] = [
     id: 'D19',
     level: 3,
     title: '비만 + 전반적 증상 심함',
-    description: '체중 감량 5~10%로 증상 유의미한 개선 가능',
+    description: '체중 관리가 도움이 될 수 있는 상황',
     rules: [
       '비만(BMI 30+) 체크 + 전체 증상 평균 심각도 3점 이상',
     ],
@@ -406,33 +406,33 @@ export const DIAGNOSES: Diagnosis[] = [
 // ── 3. 솔루션 목록 ────────────────────────────────────────────────────────
 export const SOLUTIONS: Solution[] = [
   // 즉각 대처 (SOS)
-  { id: 'S01', category: 'immediate', title: '4-7-8 호흡법', detail: '4초 들이쉬기 → 7초 참기 → 8초 내쉬기. 부교감신경 활성화로 안면홍조·불안 즉시 완화.', evidence: 'NAMS 2015 비호르몬 관리 Level I 권고', status: 'implemented' },
+  { id: 'S01', category: 'immediate', title: '4-7-8 호흡법', detail: '4초 들이쉬기 → 7초 참기 → 8초 내쉬기. 안면홍조나 불안이 느껴질 때 시도해보세요.', evidence: 'NAMS 2015 비호르몬 관리 Level I 권고', status: 'implemented' },
   { id: 'S02', category: 'immediate', title: '5-4-3-2-1 그라운딩', detail: '시각 5→청각 4→촉각 3→후각 2→미각 1. CBT 기반 불안 즉각 대처.', evidence: 'CBT for menopause, Hunter MS (2011)', status: 'implemented' },
-  { id: 'S03', category: 'immediate', title: '냉각법', detail: '차가운 물 마시기, 선풍기, 냉습포 이마·목에 적용. 안면홍조 즉각 완화.', status: 'implemented' },
+  { id: 'S03', category: 'immediate', title: '냉각법', detail: '차가운 물 마시기, 선풍기, 냉습포 이마·목에 적용. 안면홍조가 느껴질 때 시도해보세요.', status: 'implemented' },
   { id: 'S04', category: 'immediate', title: '스트레칭', detail: '목·어깨·허리 간단 스트레칭. 근육 긴장 이완.', status: 'implemented' },
 
   // 생활습관
   { id: 'S10', category: 'lifestyle', title: '카페인 줄이기', detail: '하루 200mg 이하 (아메리카노 1잔 약 75~150mg). 오후 2시 이후 카페인 금지.', evidence: 'NAMS 2015', status: 'documented' },
   { id: 'S11', category: 'lifestyle', title: '음주 줄이기', detail: '여성 기준 1잔/일 이하 (알코올 10g = 맥주 350ml 1캔 = 소주 1잔).', evidence: 'NAMS 2015', status: 'documented' },
   { id: 'S12', category: 'lifestyle', title: '수면 위생 개선', detail: '취침 1시간 전 스마트폰 금지. 침실 온도 18~20°C. 기상 시간 일정하게 유지.', evidence: 'CBT-I 기반', status: 'documented' },
-  { id: 'S13', category: 'lifestyle', title: '유산소 운동 시작', detail: '주 150분 (걷기 30분 × 5일). 안면홍조 빈도 29% 감소 효과.', evidence: 'Daley A, Cochrane 2014', status: 'documented' },
+  { id: 'S13', category: 'lifestyle', title: '유산소 운동 시작', detail: '주 150분 (걷기 30분 × 5일). 전반적인 건강 유지에 도움이 될 수 있어요.', evidence: 'Daley A, Cochrane 2014', status: 'documented' },
   { id: 'S14', category: 'lifestyle', title: '근력 운동', detail: '주 2회 근력 운동. 골밀도 유지·대사 개선.', status: 'documented' },
-  { id: 'S15', category: 'lifestyle', title: '금연', detail: '흡연은 안면홍조 빈도 증가, 조기 폐경, 골다공증 위험 상승.', status: 'documented' },
-  { id: 'S16', category: 'lifestyle', title: '체중 감량 (5~10%)', detail: '비만 여성에서 체중 5~10% 감량 시 안면홍조 유의미한 감소.', status: 'documented' },
+  { id: 'S15', category: 'lifestyle', title: '금연', detail: '금연은 전반적인 건강에 도움이 되는 좋은 선택이에요.', status: 'documented' },
+  { id: 'S16', category: 'lifestyle', title: '체중 관리', detail: '균형 잡힌 식단과 규칙적인 운동으로 건강한 체중을 유지해보세요.', status: 'documented' },
   { id: 'S17', category: 'lifestyle', title: '스트레스 관리', detail: '마음챙김, 명상, SOS 호흡법 일상화. 주 1~2회 이완 활동.', status: 'documented' },
-  { id: 'S18', category: 'lifestyle', title: '햇빛 30분/일', detail: '비타민D 합성. 기분·수면 개선. 자외선 차단제 없이 10~14시 피부 노출.', status: 'documented' },
+  { id: 'S18', category: 'lifestyle', title: '햇빛 30분/일', detail: '하루 30분 정도 햇빛을 쬐면 기분 전환에 도움이 될 수 있어요.', status: 'documented' },
 
   // 영양
   { id: 'S20', category: 'nutrition', title: '이소플라본 식품 섭취', detail: '두부 150g/일 or 된장국 1그릇/일. 이소플라본 40~70mg/일 목표.', evidence: 'Franco OH, JAMA 2016 — 안면홍조 26% 감소', status: 'documented' },
   { id: 'S21', category: 'nutrition', title: '칼슘 충분히 섭취', detail: '700mg/일 (우유 200ml 2잔, 뱅어포 15g, 멸치 30g). 칼슘 보충제는 식품 우선 후 부족분만.', evidence: '한국영양학회 DRI 2020', status: 'documented' },
   { id: 'S22', category: 'nutrition', title: '비타민D 보충', detail: '800~1000IU/일. 햇빛 30분 or 보충제. 골다공증 지병 시 1500~2000IU 검토.', evidence: 'NICE NG23 2019', status: 'documented' },
-  { id: 'S23', category: 'nutrition', title: '마그네슘 섭취', detail: '280mg/일 (호박씨 28g, 아몬드 28g, 검은콩). 수면·불안·근육통 완화.', status: 'documented' },
+  { id: 'S23', category: 'nutrition', title: '마그네슘 섭취', detail: '호박씨, 아몬드, 검은콩 등에 풍부해요. 균형 잡힌 영양 섭취에 도움이 돼요.', status: 'documented' },
   { id: 'S24', category: 'nutrition', title: '오메가-3 섭취', detail: '1000mg/일 (고등어·삼치 1토막 주 2회, 들기름 1~2큰술). 기분·심혈관·관절.', status: 'documented' },
-  { id: 'S25', category: 'nutrition', title: '당분·정제탄수 줄이기', detail: '혈당 스파이크 → 안면홍조 악화. 흰쌀 → 잡곡, 단 음료 금지.', status: 'documented' },
-  { id: 'S26', category: 'nutrition', title: '수분 충분히 섭취', detail: '하루 1.5~2L. 안면홍조·피로 완화.', status: 'documented' },
+  { id: 'S25', category: 'nutrition', title: '당분·정제탄수 줄이기', detail: '흰쌀 대신 잡곡, 단 음료 대신 물이나 차를 선택해보세요.', status: 'documented' },
+  { id: 'S26', category: 'nutrition', title: '수분 충분히 섭취', detail: '하루 1.5~2L 수분 섭취는 건강한 생활 습관의 기본이에요.', status: 'documented' },
 
   // 의료적
-  { id: 'S30', category: 'medical', title: '산부인과 — HRT 상담', detail: 'HRT는 혈관운동 증상에 가장 효과적. 금기증(유방암 등) 없으면 검토.', evidence: 'NAMS 2022 Position Statement', status: 'documented' },
+  { id: 'S30', category: 'medical', title: '산부인과 — HRT 상담', detail: 'HRT에 대해 전문의와 상담해보세요. 금기증(유방암 등) 여부 확인이 필요해요.', evidence: 'NAMS 2022 Position Statement', status: 'documented' },
   { id: 'S31', category: 'medical', title: '정신건강의학과 — 우울 상담', detail: 'PHQ-9 선별검사. 갱년기 우울 vs 임상 우울 감별 필요.', status: 'documented' },
   { id: 'S32', category: 'medical', title: '갑상선 기능 검사', detail: 'TSH, Free T4 혈액검사. 갱년기 증상과 구분 필수.', status: 'documented' },
   { id: 'S33', category: 'medical', title: '골밀도 검사 (DEXA)', detail: '폐경 후 여성 2년 1회 권장. 골다공증 진행 여부 확인.', status: 'documented' },
@@ -441,7 +441,7 @@ export const SOLUTIONS: Solution[] = [
   { id: 'S36', category: 'medical', title: '심장내과 상담', detail: '두근거림 + 심혈관 지병 — 즉각 내과 방문.', status: 'documented' },
 
   // 모니터링
-  { id: 'S40', category: 'monitoring', title: '주간 증상 추이 확인', detail: '7일 차트에서 패턴 확인. 악화 추세 시 레벨 재분류.', status: 'implemented' },
+  { id: 'S40', category: 'monitoring', title: '주간 증상 추이 확인', detail: '7일 차트에서 패턴 확인. 점수 상승 추세 시 레벨 재분류.', status: 'implemented' },
   { id: 'S41', category: 'monitoring', title: 'HRT 효과 추적', detail: 'HRT 시작 후 4~8주 증상 변화 추이 비교.', status: 'documented' },
 ];
 

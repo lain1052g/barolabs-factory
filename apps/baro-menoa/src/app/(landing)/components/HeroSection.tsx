@@ -82,7 +82,7 @@ export function HeroSection() {
             className="mt-4 w-full py-2.5 rounded-xl text-center text-sm font-semibold text-white"
             style={{ background: 'linear-gradient(135deg, #800020, #c0005a)' }}
           >
-            🆘 SOS — 지금 바로 완화하기
+            🆘 SOS — 지금 바로 대처하기
           </div>
         </div>
       </div>

@@ -9,7 +9,7 @@ export function CtaSection() {
           오늘부터 시작해보세요
         </h2>
         <p className="mt-4 text-gray-500 text-lg">
-          갱년기는 질병이 아닙니다. 올바른 관리로 더 건강하고 활기찬 삶이 가능합니다.
+          갱년기는 질병이 아닙니다. 매일 기록하며 나를 이해하는 것부터 시작해보세요.
         </p>
         <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
           <Link

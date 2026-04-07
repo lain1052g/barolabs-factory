@@ -461,7 +461,7 @@ export async function getVisitSummary(days = 30): Promise<VisitSummaryData> {
   }
 
   if (symptoms.some(s => s.name.includes('안면홍조') || s.name.includes('발한')) && symptoms.some(s => s.avgSeverity >= 4)) {
-    doctorQuestions.push('안면홍조·발한 증상이 심한 편입니다. 즉각적인 완화에 도움이 되는 방법이 있나요?');
+    doctorQuestions.push('안면홍조·발한 기록이 자주 있어요. 도움이 되는 방법에 대해 상담받고 싶습니다.');
   }
 
   if (doctorQuestions.length === 0) {

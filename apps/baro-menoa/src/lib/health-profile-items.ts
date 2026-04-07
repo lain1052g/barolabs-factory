@@ -33,7 +33,7 @@ export const CONDITIONS: HealthItem[] = [
     id: 'diabetes',
     label: '당뇨 / 혈당 이상',
     weight: 4,
-    note: '혈당 변동이 안면홍조 악화 요인.',
+    note: '혈당 변동과 안면홍조가 관련될 수 있음.',
   },
   {
     id: 'obesity',
@@ -63,7 +63,7 @@ export const CONDITIONS: HealthItem[] = [
     id: 'hypertension',
     label: '고혈압',
     weight: 3,
-    note: '일부 혈압약이 안면홍조 유발. 약물 섹션 연동.',
+    note: '일부 혈압약이 안면홍조와 관련될 수 있음. 약물 섹션 연동.',
   },
   {
     id: 'cardiovascular',
@@ -87,7 +87,7 @@ export const CONDITIONS: HealthItem[] = [
     id: 'autoimmune',
     label: '자가면역질환 (류마티스 등)',
     weight: 2,
-    note: '염증 수치 증가로 증상 악화 가능.',
+    note: '자가면역질환이 증상에 영향을 줄 수 있음.',
   },
 ];
 
@@ -109,7 +109,7 @@ export const MEDICAL_HISTORY: HealthItem[] = [
     id: 'chemotherapy',
     label: '항암제 / 화학요법 치료 이력',
     weight: 4,
-    note: '조기 폐경 유발 가능. 증상 패턴 해석 시 참고.',
+    note: '조기 폐경과 관련될 수 있음. 증상 패턴 참고.',
   },
   {
     id: 'early_menopause_family',

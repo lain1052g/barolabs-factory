@@ -58,7 +58,7 @@ export function WelcomeEmail({ name }: WelcomeEmailProps) {
               <Section style={featureText}>
                 <Text style={featureTitle}>SOS 긴급 대응</Text>
                 <Text style={featureDesc}>
-                  갑작스러운 증상이 찾아올 때 즉각적인 완화 가이드를 제공합니다.
+                  증상이 심할 때 바로 따라 할 수 있는 대처법을 안내합니다.
                 </Text>
               </Section>
             </Section>

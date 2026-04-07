@@ -5,7 +5,7 @@ import { TriggerLogForm } from '@/components/TriggerLogForm';
 
 export const metadata: Metadata = {
   title: '트리거 기록 | 메노아',
-  description: '증상 악화 원인을 추적하고 패턴을 파악하세요.',
+  description: '생활 요인을 기록하고 나만의 패턴을 파악하세요.',
 };
 
 export const revalidate = 0;
@@ -51,7 +51,7 @@ export default async function TriggersPage() {
         <span className="text-2xl leading-none">🎯</span>
         <div>
           <p className="text-sm font-semibold" style={{ color: 'var(--c-brand)' }}>
-            증상 악화 원인 추적
+            생활 요인 기록
           </p>
           <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
             오늘 겪은 트리거를 선택하면 증상과의 연관성을 파악할 수 있어요.

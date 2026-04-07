@@ -20,7 +20,7 @@ export function CorrelationChart({ data, analyzedDays }: CorrelationChartProps) 
       <div className="text-center py-8 text-sm text-gray-400">
         <p className="text-2xl mb-2">📊</p>
         <p>트리거와 증상을 모두 기록한 날이 없어요.</p>
-        <p className="text-xs mt-1 text-gray-300">트리거와 증상을 함께 기록하면 상관관계가 분석됩니다.</p>
+        <p className="text-xs mt-1 text-gray-300">트리거와 증상을 함께 기록하면 기록 비교를 볼 수 있어요.</p>
       </div>
     );
   }
@@ -32,10 +32,10 @@ export function CorrelationChart({ data, analyzedDays }: CorrelationChartProps) 
         const deltaPositive = item.severity_delta > 0;
         const deltaLabel =
           item.severity_delta > 0.2
-            ? '증상 악화'
+            ? '점수 높음'
             : item.severity_delta < -0.2
-            ? '증상 완화'
-            : '영향 미미';
+            ? '점수 낮음'
+            : '차이 적음';
         const deltaColor =
           item.severity_delta > 0.2
             ? '#ef4444'
