@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIM 이모지 미리보기 — barolabs.kr</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Noto Sans KR', sans-serif; background: #f0f4f8; color: #1e2d3d; }
+
+header {
+  background: #0c2d4a;
+  color: white;
+  padding: 24px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+header h1 { font-size: 22px; font-weight: 700; }
+header span { font-size: 13px; opacity: 0.6; }
+.badge-free {
+  background: #22c55e;
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.filter-bar {
+  background: white;
+  border-bottom: 1px solid #dde6ee;
+  padding: 14px 40px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.filter-btn {
+  padding: 6px 16px;
+  border-radius: 99px;
+  border: 1.5px solid #dde6ee;
+  background: white;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.filter-btn.active, .filter-btn:hover {
+  background: #0284C7;
+  border-color: #0284C7;
+  color: white;
+}
+
+main { padding: 32px 40px; max-width: 1400px; margin: 0 auto; }
+
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: #0284C7;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  margin: 36px 0 12px;
+}
+.section-label:first-child { margin-top: 0; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 16px;
+}
+
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  transition: transform .15s, box-shadow .15s;
+}
+.card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.1); }
+
+.card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+.card-title { font-size: 15px; font-weight: 700; }
+.card-meta { font-size: 11px; color: #888; margin-top: 3px; }
+.grade-badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 99px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.grade-유치부 { background: #fef9c3; color: #854d0e; }
+.grade-1-2학년 { background: #dcfce7; color: #166534; }
+.grade-3-4학년 { background: #dbeafe; color: #1e40af; }
+.grade-5-6학년 { background: #ede9fe; color: #5b21b6; }
+.grade-중학교 { background: #fce7f3; color: #9d174d; }
+
+.categories {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+.cat-pill {
+  background: #f0f4f8;
+  border: 1.5px solid #dde6ee;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #5a6a7a;
+}
+
+.items-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  background: #f8fafc;
+  border: 1.5px solid #e8edf2;
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-width: 64px;
+  transition: all .15s;
+  cursor: default;
+}
+.item:hover {
+  background: #e0f2fe;
+  border-color: #0284C7;
+}
+.item-emoji { font-size: 28px; line-height: 1; }
+.item-label { font-size: 11px; font-weight: 600; color: #5a6a7a; text-align: center; }
+
+.note {
+  font-size: 11px;
+  color: #aaa;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #f0f4f8;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+footer {
+  text-align: center;
+  padding: 40px;
+  font-size: 13px;
+  color: #aaa;
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>SIM 이모지 미리보기</h1>
+    <span>barolabs.kr — 분류 드래그앤드롭 시뮬레이션</span>
+  </div>
+  <span class="badge-free">Twemoji MIT · OpenMoji CC-BY · SVG Silh CC0</span>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filter('all')">전체</button>
+  <button class="filter-btn" onclick="filter('유치부')">유치부</button>
+  <button class="filter-btn" onclick="filter('1-2학년')">초1~2</button>
+  <button class="filter-btn" onclick="filter('3-4학년')">초3~4</button>
+  <button class="filter-btn" onclick="filter('5-6학년')">초5~6</button>
+  <button class="filter-btn" onclick="filter('중학교')">중학교</button>
+</div>
+
+<main>
+
+<!-- 유치부 -->
+<div class="section-label" data-grade="유치부">유치부 (5~7세)</div>
+<div class="cards-grid">
+
+  <div class="card" data-grade="유치부">
+    <div class="card-header">
+      <div><div class="card-title">동물 사는 곳</div><div class="card-meta">과학(생활과학)</div></div>
+      <span class="grade-badge grade-유치부">유치부</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🏠 집에 사는 동물</span>
+      <span class="cat-pill">🌿 밖에 사는 동물</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🐕</span><span class="item-label">강아지</span></div>
+      <div class="item"><span class="item-emoji">🐈</span><span class="item-label">고양이</span></div>
+      <div class="item"><span class="item-emoji">🦋</span><span class="item-label">나비</span></div>
+      <div class="item"><span class="item-emoji">🐜</span><span class="item-label">개미</span></div>
+      <div class="item"><span class="item-emoji">🐇</span><span class="item-label">토끼</span></div>
+      <div class="item"><span class="item-emoji">🦊</span><span class="item-label">여우</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="유치부">
+    <div class="card-header">
+      <div><div class="card-title">음식 분류</div><div class="card-meta">과학(생활과학)</div></div>
+      <span class="grade-badge grade-유치부">유치부</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🍓 과일</span>
+      <span class="cat-pill">🥕 채소</span>
+      <span class="cat-pill">🍗 고기/단백질</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🍓</span><span class="item-label">딸기</span></div>
+      <div class="item"><span class="item-emoji">🍌</span><span class="item-label">바나나</span></div>
+      <div class="item"><span class="item-emoji">🍎</span><span class="item-label">사과</span></div>
+      <div class="item"><span class="item-emoji">🥕</span><span class="item-label">당근</span></div>
+      <div class="item"><span class="item-emoji">🥦</span><span class="item-label">브로콜리</span></div>
+      <div class="item"><span class="item-emoji">🌽</span><span class="item-label">옥수수</span></div>
+      <div class="item"><span class="item-emoji">🍗</span><span class="item-label">닭고기</span></div>
+      <div class="item"><span class="item-emoji">🥚</span><span class="item-label">달걀</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="유치부">
+    <div class="card-header">
+      <div><div class="card-title">날씨 분류</div><div class="card-meta">과학(생활과학)</div></div>
+      <span class="grade-badge grade-유치부">유치부</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">☀️ 맑음</span>
+      <span class="cat-pill">🌧️ 비</span>
+      <span class="cat-pill">❄️ 눈</span>
+      <span class="cat-pill">🌁 흐림</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">☀️</span><span class="item-label">해</span></div>
+      <div class="item"><span class="item-emoji">🌤️</span><span class="item-label">약간 흐림</span></div>
+      <div class="item"><span class="item-emoji">⛅</span><span class="item-label">구름</span></div>
+      <div class="item"><span class="item-emoji">🌧️</span><span class="item-label">비</span></div>
+      <div class="item"><span class="item-emoji">⛈️</span><span class="item-label">천둥비</span></div>
+      <div class="item"><span class="item-emoji">❄️</span><span class="item-label">눈</span></div>
+      <div class="item"><span class="item-emoji">🌨️</span><span class="item-label">눈보라</span></div>
+      <div class="item"><span class="item-emoji">🌫️</span><span class="item-label">안개</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="유치부">
+    <div class="card-header">
+      <div><div class="card-title">악기 분류</div><div class="card-meta">음악</div></div>
+      <span class="grade-badge grade-유치부">유치부</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🥁 치는 악기</span>
+      <span class="cat-pill">🎺 부는 악기</span>
+      <span class="cat-pill">🎸 튕기는 악기</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🥁</span><span class="item-label">드럼</span></div>
+      <div class="item"><span class="item-emoji">🪘</span><span class="item-label">봉고</span></div>
+      <div class="item"><span class="item-emoji">🎺</span><span class="item-label">트럼펫</span></div>
+      <div class="item"><span class="item-emoji">🎷</span><span class="item-label">색소폰</span></div>
+      <div class="item"><span class="item-emoji">🎸</span><span class="item-label">기타</span></div>
+      <div class="item"><span class="item-emoji">🪕</span><span class="item-label">밴조</span></div>
+      <div class="item"><span class="item-emoji">🎻</span><span class="item-label">바이올린</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 초1~2학년 -->
+<div class="section-label" data-grade="1-2학년">초등 1~2학년</div>
+<div class="cards-grid">
+
+  <div class="card" data-grade="1-2학년">
+    <div class="card-header">
+      <div><div class="card-title">동물 vs 식물</div><div class="card-meta">1학년 과학</div></div>
+      <span class="grade-badge grade-1-2학년">초1</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🐾 동물</span>
+      <span class="cat-pill">🌱 식물</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🐯</span><span class="item-label">호랑이</span></div>
+      <div class="item"><span class="item-emoji">🐟</span><span class="item-label">물고기</span></div>
+      <div class="item"><span class="item-emoji">🐦</span><span class="item-label">참새</span></div>
+      <div class="item"><span class="item-emoji">🌳</span><span class="item-label">나무</span></div>
+      <div class="item"><span class="item-emoji">🌸</span><span class="item-label">꽃</span></div>
+      <div class="item"><span class="item-emoji">🌵</span><span class="item-label">선인장</span></div>
+      <div class="item"><span class="item-emoji">🐝</span><span class="item-label">벌</span></div>
+      <div class="item"><span class="item-emoji">🍀</span><span class="item-label">클로버</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="1-2학년">
+    <div class="card-header">
+      <div><div class="card-title">계절 분류</div><div class="card-meta">1학년 통합(슬기로운 생활)</div></div>
+      <span class="grade-badge grade-1-2학년">초1</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🌸 봄</span>
+      <span class="cat-pill">☀️ 여름</span>
+      <span class="cat-pill">🍂 가을</span>
+      <span class="cat-pill">⛄ 겨울</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🌸</span><span class="item-label">벚꽃</span></div>
+      <div class="item"><span class="item-emoji">🌷</span><span class="item-label">튤립</span></div>
+      <div class="item"><span class="item-emoji">🍦</span><span class="item-label">아이스크림</span></div>
+      <div class="item"><span class="item-emoji">🏊</span><span class="item-label">수영</span></div>
+      <div class="item"><span class="item-emoji">🍂</span><span class="item-label">단풍</span></div>
+      <div class="item"><span class="item-emoji">🍎</span><span class="item-label">사과</span></div>
+      <div class="item"><span class="item-emoji">⛄</span><span class="item-label">눈사람</span></div>
+      <div class="item"><span class="item-emoji">🧤</span><span class="item-label">장갑</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="1-2학년">
+    <div class="card-header">
+      <div><div class="card-title">물의 상태</div><div class="card-meta">2학년 과학</div></div>
+      <span class="grade-badge grade-1-2학년">초2</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🧊 고체</span>
+      <span class="cat-pill">💧 액체</span>
+      <span class="cat-pill">💨 기체</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🧊</span><span class="item-label">얼음</span></div>
+      <div class="item"><span class="item-emoji">⛄</span><span class="item-label">눈</span></div>
+      <div class="item"><span class="item-emoji">💧</span><span class="item-label">물</span></div>
+      <div class="item"><span class="item-emoji">🧃</span><span class="item-label">주스</span></div>
+      <div class="item"><span class="item-emoji">💨</span><span class="item-label">수증기</span></div>
+      <div class="item"><span class="item-emoji">🎈</span><span class="item-label">풍선(공기)</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="1-2학년">
+    <div class="card-header">
+      <div><div class="card-title">동물 다리 수</div><div class="card-meta">2학년 과학</div></div>
+      <span class="grade-badge grade-1-2학년">초2</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🐾 다리 4개</span>
+      <span class="cat-pill">🦟 다리 6개</span>
+      <span class="cat-pill">🐍 다리 없음</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🐕</span><span class="item-label">개</span></div>
+      <div class="item"><span class="item-emoji">🐈</span><span class="item-label">고양이</span></div>
+      <div class="item"><span class="item-emoji">🐛</span><span class="item-label">애벌레</span></div>
+      <div class="item"><span class="item-emoji">🐝</span><span class="item-label">벌</span></div>
+      <div class="item"><span class="item-emoji">🐞</span><span class="item-label">무당벌레</span></div>
+      <div class="item"><span class="item-emoji">🐍</span><span class="item-label">뱀</span></div>
+      <div class="item"><span class="item-emoji">🐌</span><span class="item-label">달팽이</span></div>
+      <div class="item"><span class="item-emoji">🐟</span><span class="item-label">물고기</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 초3~4학년 -->
+<div class="section-label" data-grade="3-4학년">초등 3~4학년</div>
+<div class="cards-grid">
+
+  <div class="card" data-grade="3-4학년">
+    <div class="card-header">
+      <div><div class="card-title">동물 분류 (5계)</div><div class="card-meta">3학년 과학 — 동물의 생활</div></div>
+      <span class="grade-badge grade-3-4학년">초3</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🦁 포유류</span>
+      <span class="cat-pill">🐦 조류</span>
+      <span class="cat-pill">🐍 파충류</span>
+      <span class="cat-pill">🐸 양서류</span>
+      <span class="cat-pill">🐟 어류</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🦁</span><span class="item-label">사자</span></div>
+      <div class="item"><span class="item-emoji">🐋</span><span class="item-label">고래</span></div>
+      <div class="item"><span class="item-emoji">🦇</span><span class="item-label">박쥐</span></div>
+      <div class="item"><span class="item-emoji">🦅</span><span class="item-label">독수리</span></div>
+      <div class="item"><span class="item-emoji">🐧</span><span class="item-label">펭귄</span></div>
+      <div class="item"><span class="item-emoji">🦜</span><span class="item-label">앵무새</span></div>
+      <div class="item"><span class="item-emoji">🐊</span><span class="item-label">악어</span></div>
+      <div class="item"><span class="item-emoji">🦎</span><span class="item-label">도마뱀</span></div>
+      <div class="item"><span class="item-emoji">🐸</span><span class="item-label">개구리</span></div>
+      <div class="item"><span class="item-emoji">🦈</span><span class="item-label">상어</span></div>
+      <div class="item"><span class="item-emoji">🐡</span><span class="item-label">복어</span></div>
+      <div class="item"><span class="item-emoji">🐙</span><span class="item-label">문어</span></div>
+    </div>
+    <div class="note">⚠️ 문어(연체동물)처럼 헷갈리는 것 포함 — 오답 유도용</div>
+  </div>
+
+  <div class="card" data-grade="3-4학년">
+    <div class="card-header">
+      <div><div class="card-title">동물 사는 곳</div><div class="card-meta">3학년 과학</div></div>
+      <span class="grade-badge grade-3-4학년">초3</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🏔️ 육지</span>
+      <span class="cat-pill">🌊 물속</span>
+      <span class="cat-pill">🌤️ 하늘</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🐕</span><span class="item-label">강아지</span></div>
+      <div class="item"><span class="item-emoji">🐘</span><span class="item-label">코끼리</span></div>
+      <div class="item"><span class="item-emoji">🐟</span><span class="item-label">붕어</span></div>
+      <div class="item"><span class="item-emoji">🦑</span><span class="item-label">오징어</span></div>
+      <div class="item"><span class="item-emoji">🦅</span><span class="item-label">독수리</span></div>
+      <div class="item"><span class="item-emoji">🦋</span><span class="item-label">나비</span></div>
+      <div class="item"><span class="item-emoji">🐊</span><span class="item-label">악어</span></div>
+      <div class="item"><span class="item-emoji">🐧</span><span class="item-label">펭귄</span></div>
+    </div>
+    <div class="note">⚠️ 악어·펭귄 같은 경계 케이스 포함 — 사고력 자극</div>
+  </div>
+
+  <div class="card" data-grade="3-4학년">
+    <div class="card-header">
+      <div><div class="card-title">식물 번식 방법</div><div class="card-meta">4학년 과학</div></div>
+      <span class="grade-badge grade-3-4학년">초4</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🌱 씨앗으로</span>
+      <span class="cat-pill">🌿 뿌리·줄기로</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🌻</span><span class="item-label">해바라기</span></div>
+      <div class="item"><span class="item-emoji">🌾</span><span class="item-label">벼</span></div>
+      <div class="item"><span class="item-emoji">🌽</span><span class="item-label">옥수수</span></div>
+      <div class="item"><span class="item-emoji">🍓</span><span class="item-label">딸기</span></div>
+      <div class="item"><span class="item-emoji">🥔</span><span class="item-label">감자</span></div>
+      <div class="item"><span class="item-emoji">🧅</span><span class="item-label">양파</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="3-4학년">
+    <div class="card-header">
+      <div><div class="card-title">지역별 특산물</div><div class="card-meta">3학년 사회</div></div>
+      <span class="grade-badge grade-3-4학년">초3</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">⛰️ 산지</span>
+      <span class="cat-pill">🌾 평야</span>
+      <span class="cat-pill">🌊 해안</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🍎</span><span class="item-label">사과</span></div>
+      <div class="item"><span class="item-emoji">🍄</span><span class="item-label">버섯</span></div>
+      <div class="item"><span class="item-emoji">🌾</span><span class="item-label">쌀</span></div>
+      <div class="item"><span class="item-emoji">🧅</span><span class="item-label">양파</span></div>
+      <div class="item"><span class="item-emoji">🦞</span><span class="item-label">바닷가재</span></div>
+      <div class="item"><span class="item-emoji">🦀</span><span class="item-label">게</span></div>
+      <div class="item"><span class="item-emoji">🐟</span><span class="item-label">생선</span></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- 초5~6학년 -->
+<div class="section-label" data-grade="5-6학년">초등 5~6학년</div>
+<div class="cards-grid">
+
+  <div class="card" data-grade="5-6학년">
+    <div class="card-header">
+      <div><div class="card-title">육식 / 초식 / 잡식</div><div class="card-meta">5학년 과학 — 동물의 생활</div></div>
+      <span class="grade-badge grade-5-6학년">초5</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🥩 육식동물</span>
+      <span class="cat-pill">🥬 초식동물</span>
+      <span class="cat-pill">🍱 잡식동물</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🦁</span><span class="item-label">사자</span></div>
+      <div class="item"><span class="item-emoji">🐺</span><span class="item-label">늑대</span></div>
+      <div class="item"><span class="item-emoji">🦅</span><span class="item-label">독수리</span></div>
+      <div class="item"><span class="item-emoji">🐄</span><span class="item-label">소</span></div>
+      <div class="item"><span class="item-emoji">🐇</span><span class="item-label">토끼</span></div>
+      <div class="item"><span class="item-emoji">🦒</span><span class="item-label">기린</span></div>
+      <div class="item"><span class="item-emoji">🐻</span><span class="item-label">곰</span></div>
+      <div class="item"><span class="item-emoji">🐷</span><span class="item-label">돼지</span></div>
+      <div class="item"><span class="item-emoji">🐒</span><span class="item-label">원숭이</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="5-6학년">
+    <div class="card-header">
+      <div><div class="card-title">산업 분류</div><div class="card-meta">5학년 사회</div></div>
+      <span class="grade-badge grade-5-6학년">초5</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🌾 1차 산업</span>
+      <span class="cat-pill">🏭 2차 산업</span>
+      <span class="cat-pill">🏪 3차 산업</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🌾</span><span class="item-label">농업</span></div>
+      <div class="item"><span class="item-emoji">🎣</span><span class="item-label">어업</span></div>
+      <div class="item"><span class="item-emoji">🪵</span><span class="item-label">임업</span></div>
+      <div class="item"><span class="item-emoji">🏭</span><span class="item-label">제조업</span></div>
+      <div class="item"><span class="item-emoji">🔨</span><span class="item-label">건설업</span></div>
+      <div class="item"><span class="item-emoji">🏥</span><span class="item-label">의료</span></div>
+      <div class="item"><span class="item-emoji">🛒</span><span class="item-label">유통</span></div>
+      <div class="item"><span class="item-emoji">✈️</span><span class="item-label">관광</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="5-6학년">
+    <div class="card-header">
+      <div><div class="card-title">영어 음식 분류</div><div class="card-meta">5학년 영어</div></div>
+      <span class="grade-badge grade-5-6학년">초5</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🍎 Fruit</span>
+      <span class="cat-pill">🥦 Vegetable</span>
+      <span class="cat-pill">🍗 Protein</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🍎</span><span class="item-label">Apple</span></div>
+      <div class="item"><span class="item-emoji">🍇</span><span class="item-label">Grapes</span></div>
+      <div class="item"><span class="item-emoji">🍊</span><span class="item-label">Orange</span></div>
+      <div class="item"><span class="item-emoji">🥕</span><span class="item-label">Carrot</span></div>
+      <div class="item"><span class="item-emoji">🥦</span><span class="item-label">Broccoli</span></div>
+      <div class="item"><span class="item-emoji">🍗</span><span class="item-label">Chicken</span></div>
+      <div class="item"><span class="item-emoji">🥚</span><span class="item-label">Egg</span></div>
+      <div class="item"><span class="item-emoji">🐟</span><span class="item-label">Fish</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="5-6학년">
+    <div class="card-header">
+      <div><div class="card-title">별 / 행성 / 위성</div><div class="card-meta">6학년 과학 — 태양계</div></div>
+      <span class="grade-badge grade-5-6학년">초6</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">⭐ 별(항성)</span>
+      <span class="cat-pill">🪐 행성</span>
+      <span class="cat-pill">🌕 위성</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">☀️</span><span class="item-label">태양</span></div>
+      <div class="item"><span class="item-emoji">⭐</span><span class="item-label">북극성</span></div>
+      <div class="item"><span class="item-emoji">🌍</span><span class="item-label">지구</span></div>
+      <div class="item"><span class="item-emoji">🪐</span><span class="item-label">토성</span></div>
+      <div class="item"><span class="item-emoji">🔴</span><span class="item-label">화성</span></div>
+      <div class="item"><span class="item-emoji">🌕</span><span class="item-label">달</span></div>
+      <div class="item"><span class="item-emoji">🌑</span><span class="item-label">유로파</span></div>
+    </div>
+    <div class="note">⚠️ 유로파(목성의 위성) 같은 심화 문항 포함 가능</div>
+  </div>
+
+</div>
+
+<!-- 중학교 -->
+<div class="section-label" data-grade="중학교">중학교 1~3학년</div>
+<div class="cards-grid">
+
+  <div class="card" data-grade="중학교">
+    <div class="card-header">
+      <div><div class="card-title">힘의 종류</div><div class="card-meta">중2 과학</div></div>
+      <span class="grade-badge grade-중학교">중2</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">⬇️ 중력</span>
+      <span class="cat-pill">↔️ 마찰력</span>
+      <span class="cat-pill">🔁 탄성력</span>
+      <span class="cat-pill">🧲 자기력</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🍎</span><span class="item-label">낙하하는 사과</span></div>
+      <div class="item"><span class="item-emoji">🌍</span><span class="item-label">지구 중력</span></div>
+      <div class="item"><span class="item-emoji">🛹</span><span class="item-label">멈추는 스케이트</span></div>
+      <div class="item"><span class="item-emoji">🏃</span><span class="item-label">달리기</span></div>
+      <div class="item"><span class="item-emoji">🏹</span><span class="item-label">활 쏘기</span></div>
+      <div class="item"><span class="item-emoji">🪀</span><span class="item-label">요요</span></div>
+      <div class="item"><span class="item-emoji">🧲</span><span class="item-label">자석</span></div>
+      <div class="item"><span class="item-emoji">🧭</span><span class="item-label">나침반</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="중학교">
+    <div class="card-header">
+      <div><div class="card-title">영어 품사</div><div class="card-meta">중2 영어</div></div>
+      <span class="grade-badge grade-중학교">중2</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">📦 명사(Noun)</span>
+      <span class="cat-pill">🏃 동사(Verb)</span>
+      <span class="cat-pill">🎨 형용사(Adj)</span>
+      <span class="cat-pill">⚡ 부사(Adv)</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🐕</span><span class="item-label">dog</span></div>
+      <div class="item"><span class="item-emoji">📚</span><span class="item-label">book</span></div>
+      <div class="item"><span class="item-emoji">🏃</span><span class="item-label">run</span></div>
+      <div class="item"><span class="item-emoji">🍳</span><span class="item-label">cook</span></div>
+      <div class="item"><span class="item-emoji">🌈</span><span class="item-label">beautiful</span></div>
+      <div class="item"><span class="item-emoji">🌡️</span><span class="item-label">hot</span></div>
+      <div class="item"><span class="item-emoji">⚡</span><span class="item-label">quickly</span></div>
+      <div class="item"><span class="item-emoji">🌙</span><span class="item-label">always</span></div>
+    </div>
+  </div>
+
+  <div class="card" data-grade="중학교">
+    <div class="card-header">
+      <div><div class="card-title">기후 분류</div><div class="card-meta">중2 지리</div></div>
+      <span class="grade-badge grade-중학교">중2</span>
+    </div>
+    <div class="categories">
+      <span class="cat-pill">🌴 열대</span>
+      <span class="cat-pill">🌿 온대</span>
+      <span class="cat-pill">🌨️ 냉대</span>
+      <span class="cat-pill">🧊 한대</span>
+    </div>
+    <div class="items-row">
+      <div class="item"><span class="item-emoji">🌴</span><span class="item-label">야자수</span></div>
+      <div class="item"><span class="item-emoji">🦁</span><span class="item-label">사바나</span></div>
+      <div class="item"><span class="item-emoji">🍁</span><span class="item-label">단풍나무</span></div>
+      <div class="item"><span class="item-emoji">🌾</span><span class="item-label">밀밭</span></div>
+      <div class="item"><span class="item-emoji">🌲</span><span class="item-label">침엽수림</span></div>
+      <div class="item"><span class="item-emoji">🦌</span><span class="item-label">순록</span></div>
+      <div class="item"><span class="item-emoji">🐧</span><span class="item-label">펭귄</span></div>
+      <div class="item"><span class="item-emoji">🐻‍❄️</span><span class="item-label">북극곰</span></div>
+    </div>
+  </div>
+
+</div>
+
+</main>
+
+<footer>
+  이모지 소스: <strong>Twemoji (MIT)</strong> · <strong>OpenMoji (CC-BY 4.0)</strong> · <strong>SVG Silh (CC0)</strong><br>
+  모두 상업적 이용 가능 — sim.barolabs.kr
+</footer>
+
+<script>
+function filter(grade) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+
+  document.querySelectorAll('.card').forEach(card => {
+    if (grade === 'all' || card.dataset.grade === grade) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  document.querySelectorAll('.section-label').forEach(label => {
+    if (grade === 'all' || label.dataset.grade === grade) {
+      label.style.display = '';
+    } else {
+      label.style.display = 'none';
+    }
+  });
+}
+</script>
+
+</body>
+</html>
